@@ -1,0 +1,94 @@
+#!/usr/local/bin/node
+
+var fs = require('fs')
+  , parser  = require('xml2json');
+
+var filename = process.argv[2];
+
+var xml = fs.readFileSync(filename);
+
+var obj = parser.toJson(xml, { object: true });
+
+var format = {
+  style: 'styles',
+  parameter: 'parameters',
+  field: 'fields',
+  variable: 'variables',
+  group: 'groups'
+};
+
+var bands = [ 'title', 'pageHeader', 'columnHeader', 'detail', 'columnFooter',
+  'pageFooter', 'summary'];
+
+var ret = obj.jasperReport;
+
+for (var f in format) {
+  ret[format[f]] = ret[f];
+  delete ret[f];
+}
+
+for (var i = 0; i < bands.length; ++i) {
+  ret[bands[i]] = ret[bands[i]].band;
+}
+
+for (var i = 0; i < ret.groups.length; ++i) {
+  ret.groups[i].groupHeader = ret.groups[i].groupHeader.band;
+  ret.groups[i].groupFooter = ret.groups[i].groupFooter.band;
+}
+
+function transform(obj) {
+  for (var key in obj) {
+    if (typeof obj === 'object') {
+      transform(obj[key]);
+    }
+    if (key === 'class') {
+      obj.type = obj[key].slice(obj[key].lastIndexOf('.')+1);
+      obj.type = mapType(obj.type);
+      delete obj[key];
+    }
+    if (key === '$t') {
+      obj.value = obj[key];
+      delete obj[key];
+    }
+    if (typeof obj === 'string') {
+      obj[key] = unescape(obj[key]);
+    }
+  }
+}
+
+function mapType(type) {
+  var map = {
+    Timestamp: 'Date',
+    Long: 'Number',
+    Double: 'Number',
+    Float: 'Number',
+    Integer: 'Number'
+  }; 
+  if (Object.keys(map).indexOf(type)) {
+    return map[type];
+  }
+}
+
+// adapted from underscore.js
+function unescape(string) {
+  var map = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#x27;': "'",
+    '&#x60;': '`'
+  };
+  var escaper = function(match) {
+    return map[match];
+  };
+  var source = '(?:' + Object.keys(map).join('|') + ')';
+  var testRegexp = RegExp(source);
+  var replaceRegexp = RegExp(source, 'g');
+  string = string == null ? '' : '' + string;
+  return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
+};
+
+transform(ret);
+
+console.log(JSON.stringify(ret, null, 2));
