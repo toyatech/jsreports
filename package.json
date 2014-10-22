@@ -2,5 +2,8 @@
   "name": "jsreports",
   "version": "0.0.0",
   "author": "noisypebble <noisypebble@toyatech.net>",
-  "description": "A JavaScript reporting library."
+  "description": "A JavaScript reporting library.",
+  "dependencies": {
+    "xml2json": "0.5.1"
+  }
 }
