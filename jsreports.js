@@ -4,8 +4,10 @@
 // JSReports may be freely distributed under the GPLv2 License.
 // For all details and documentation:
 // http://jsreports.org
-// JSReports is modeled after Backbone.js (http://backbonejs.org)
-
+// JSReports is modeled after two excellent open source projects
+// JasperReports (http://jaspersoft.com/jasperreports)
+// and Backbone.js (http://backbonejs.org)
+//
 (function(root, factory) {
 
   // Setup JSReports appropriately for the environment. Start with AMD.
@@ -59,7 +61,9 @@
     // The default name of the JSON `id` attribute is `"id"`.
     idAttribute: 'id',
 
-    initialize: function(){};
+    initialize: function() {
+      
+    };
     
     toJSON: function(options) {
       return _.clone(this.attributes);
@@ -74,7 +78,13 @@
     // or undefined.
     has: function(attr) {
       return this.get(attr) != null;
-    },
+    }
+  };
 
-    // Set a hash of report attributes on the object. This is the core
-    // primative operation of a report, updating
+  var Band = function(attributes, options) {
+  };
+
+  var Group = function(attributes, options) {
+  };
+
+  
