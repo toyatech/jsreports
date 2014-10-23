@@ -39,19 +39,24 @@ for (var i = 0; i < ret.groups.length; ++i) {
 function transform(obj) {
   for (var key in obj) {
     if (typeof obj === 'object') {
-      transform(obj[key]);
+      if (Object.keys(obj).length === 0) {
+        delete obj[key];
+      } else {
+        transform(obj[key]);
+      }
     }
     if (key === 'class') {
       obj.type = obj[key].slice(obj[key].lastIndexOf('.')+1);
       obj.type = mapType(obj.type);
       delete obj[key];
     }
-    if (key === '$t') {
-      obj.value = obj[key];
+    //if (key === '$t') {
+    //  obj.value = obj[key];
+    //  delete obj[key];
+    //}
+    if (key.substring(0,2) === 'is') {
+      obj[key.substring(2,3).toLowerCase() + key.substring(3)] = obj[key];
       delete obj[key];
-    }
-    if (typeof obj === 'string') {
-      obj[key] = unescape(obj[key]);
     }
   }
 }
