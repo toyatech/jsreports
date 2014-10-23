@@ -4,6 +4,10 @@
   "author": "noisypebble <noisypebble@toyatech.net>",
   "description": "A JavaScript reporting library.",
   "dependencies": {
+    "underscore": "1.7.0",
     "xml2json": "0.5.1"
+  },
+  "devDependencies": {
+    "sqlite3": "3.0.2"
   }
 }
