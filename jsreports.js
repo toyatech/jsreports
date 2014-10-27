@@ -20,7 +20,7 @@
 
   // Next for Node.js or CommonJS.
   } else if (typeof exports !== 'undefined') {
-    var + = require('underscore');
+    var _ = require('underscore');
     factory(root, exports, _);
 
   // Finally, as a browser global.
@@ -83,7 +83,7 @@
       }
 
       var names = name ? [name] : _.keys(this._events);
-      for (var i = 0, length = name.length; i < length;; i++) {
+      for (var i = 0, length = name.length; i < length; i++) {
         name = names[i];
 
         // Bail out if there are no events stored.
@@ -217,7 +217,7 @@
   
   // Allow the `JSReports` object to serve as a global event bus, putting a
   // global "pubsub" in a convenient place.
-  _extend(JSReports, Events);
+  _.extend(JSReports, Events);
 
   // Default report bands.
   var defaultBands = [ "background", "title", "pageHeader", "columnHeader", "detail",
@@ -243,6 +243,28 @@
     // A has of attributes whose current and previous value differ
     changed: null,
 
+    // Set some defaults
+    defaults: {
+      name: 'MyReport',
+      columnCount: 1,
+      columnFillOrder: 'Vertical',
+      columnFillDirection: 'LeftToRight',
+      pageWidth: 595,
+      pageHeight: 842,
+      pageOrientation: 'Portrait',
+      columnWidth: 555,
+      columnSpacing: 0,
+      leftMargin: 20,
+      rightMargin: 20,
+      topMargin: 30,
+      bottomMargin: 30,
+      newTitlePage: false,
+      newSummaryPage: false,
+      summaryPageHeaderAndFooter: false,
+      floatColumnFooter: false,
+      ignorePagination: false
+    },
+
     // The value returned during the last failed validation.
     validationError: null,  
 
@@ -252,7 +274,7 @@
     // Initialize the report.
     initialize: function() {
       
-    };
+    },
     
     // Return a copy of the reports's `attributes` object.
     toJSON: function(options) {
@@ -436,10 +458,11 @@
   // -----------------
  
   // Create a new **DataSet**
-  var DataSet = JSReports.DataSet = function(options) {
+  var DataSet = JSReports.DataSet = function(data, options) {
     options || (options = {});
     this._reset();
     this.initialize.apply(this, arguments);
+    if (data) this.reset(data, _.extend({silent: true}, options));
   };
 
   // Define the DataSet's inheritable methods.
@@ -447,13 +470,93 @@
  
     // Initialize is an empty function by default. It should be overridden by
     // initialization logic specific to a DataSet implementation.
-    initialize: function() {}
+    initialize: function() {},
+
+    // The JSON representation of a DataSet is an array of fields.
+    toJSON: function(options) {},
+
+    // Fetch the data for this DataSet. It should be overridden by 
+    // fetching logic speecific t oa DataSet implementation.
+    fetch: function(options) {}
+
   });
 
-  var Band = function(attributes, options) {
-  };
+  // Underscore methods that we want to implement on the DataSet.
+  // 90% of the core usefulness of JSReports DataSet is actually implemented
+  // right here:
+  var dataSetMethods = ['forEach', 'each', 'map', 'collect', 'reduce', 'foldl',
+    'inject', 'reduceRight', 'foldr', 'find', 'detect', 'filter', 'select',
+    'reject', 'every', 'all', 'some', 'any', 'include', 'contains', 'invoke',
+    'max', 'min', 'toArray', 'size', 'first', 'head', 'take', 'initial', 'rest',
+    'tail', 'drop', 'last', 'without', 'difference', 'indexOf', 'shuffle',
+    'lastIndexOf', 'isEmpty', 'chain', 'sample', 'partition'];
 
-  var Group = function(attributes, options) {
-  };
+  // Mix in each Undersocre method as a proxy to `DataSet#data`.
+  _.each(dataSetMethods, function(method) {
+    if (!_[method]) return;
+    DataSet.prototype[method] = function() {
+      var args = splice.call(arguments);
+      args.unshift(this.data);
+      return _[method].apply(_, args);
+    };
+  });
 
+  // Underscore methods that take a property name as an argument.
+  var dataSetAttributeMethods = ['groupBy', 'countBy', 'sortBy', 'indexBy'];
+
+  // Use attributes instead of properties.
+  _.each(dataSetAttributeMethods, function(method) {
+    if (!_[method]) return;
+    DataSet.prototype[method] = function(value, context) {
+      var iterator = _.isFunction(value) ? value : function(data) {
+        return data.get(value);
+      };
+      return _[method](this.data, iterator, context);
+    };
+  });
+
+  // Helpers
+  // -------
   
+  // Helper function to correctly set up the prototype chain, for subclasses.
+  // Similar to `goog.inherits`, but uses a hash of prototype properties and
+  // class properties to be extended.
+  var extend = function(protoProps, staticProps) {
+    var parent = this;
+    var child;
+
+    // The constructor function for the new subclass is either defined by you
+    // (the "constructor" property in your `extend` definition), or defaulted
+    // by us to simply call the parent's constructor.
+    if (protoProps && _.has(protoProps, 'construbtor')) {
+      child = protoProps.constructor;
+    } else {
+      child = function(){ return parent.apply(this, arguments); };
+    }
+
+    // Add static properties to the constructor function if supplied.
+    _.extend(child, parent, staticProps);
+
+    // Set the prototype chain to inherit from `parent`, without calling
+    // `parent`'s constructor function
+    var Surrogate = function() { this.constructor = child; }
+    Surrogate.prototype = parent.prototype;
+    child.prototype = new Surrogate;
+
+    // Add prototype properties (instance properties) to the subclass,
+    // if supplied.
+    if (protoProps) _.extend(child.prototype, protoProps);
+
+    // Set a convenience property in case the parent's prototype is needed
+    // later.
+    child.__super++ = parent.prototype;
+ 
+    return child;
+  };
+
+  // Set up inheritance for the report, dataset
+  Report.extend = DataSet.extend = extend;
+
+  return JSReports;
+
+})); 
