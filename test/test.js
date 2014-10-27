@@ -1,5 +1,5 @@
 var assert = require('assert')
-  , jsreports = require('../');
+  , jsreports = require('../jsreports');
 
 describe('Report', function() {
 
@@ -12,24 +12,24 @@ describe('Report', function() {
       var report = new jsreports.Report;
 
       it('should have default values', function() {
-        assert.equal(report.name, 'Report');
-        assert.equal(report.columnCount, 1);
-        assert.equal(report.columnFillOrder, 'Vertical');
-        assert.equal(report.columnFillDirection, 'LeftToRight');
-        assert.equal(report.pageWidth, 595);
-        assert.equal(report.pageHeight, 842);
-        assert.equal(report.pageOrientation, 'Portrait');
-        assert.equal(report.columnWidth, 555);
-        assert.equal(report.columnSpacing, 0);
-        assert.equal(report.leftMargin, 20);
-        assert.equal(report.rightMargin, 20);
-        assert.equal(report.topMargin, 30);
-        assert.equal(report.bottomMargin, 30);
-        assert.equal(report.newTitlePage, false);
-        assert.equal(report.newSummaryPage, false);
-        assert.equal(report.summaryPageHeaderAndFooter, false);
-        assert.equal(report.floatColumnFooter, false);
-        assert.equal(report.ignorePagination, false);
+        assert.equal(report.get('name'), 'MyReport');
+        assert.equal(report.get('columnCount'), 1);
+        assert.equal(report.get('columnFillOrder'), 'Vertical');
+        assert.equal(report.get('columnFillDirection'), 'LeftToRight');
+        assert.equal(report.get('pageWidth'), 595);
+        assert.equal(report.get('pageHeight'), 842);
+        assert.equal(report.get('pageOrientation'), 'Portrait');
+        assert.equal(report.get('columnWidth'), 555);
+        assert.equal(report.get('columnSpacing'), 0);
+        assert.equal(report.get('leftMargin'), 20);
+        assert.equal(report.get('rightMargin'), 20);
+        assert.equal(report.get('topMargin'), 30);
+        assert.equal(report.get('bottomMargin'), 30);
+        assert.equal(report.get('newTitlePage'), false);
+        assert.equal(report.get('newSummaryPage'), false);
+        assert.equal(report.get('summaryPageHeaderAndFooter'), false);
+        assert.equal(report.get('floatColumnFooter'), false);
+        assert.equal(report.get('ignorePagination'), false);
       })
     })
 
@@ -40,7 +40,7 @@ describe('Report', function() {
       });
 
       it('should have defined values', function() {
-        assert.equal(report.name, 'FirstReport');
+        assert.equal(report.get('name'), 'FirstReport');
       })
     })
 
