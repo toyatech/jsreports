@@ -29,9 +29,7 @@
     root.JSReports = factory(root, {}, root._, root.Backbone);
   }
 
-}(this, function(root, JSReports, _, Backbone) {
-
-  
+}(this, function(root, JSReports, _, Backbone) { 
 
   // Initial Setup
   // -------------
@@ -39,6 +37,10 @@
   // Save the previous value of the 'JSReports' variable, so that it can be
   // restored later on, if 'noConflict' is used.
   var previousJSReports = root.JSReports;
+
+  // Override Backbone.sync to disable persistence
+  Backbone.sync = function(method, model, options) {
+  };
 
   // Helpers
   // -------
@@ -72,6 +74,15 @@
   // Create a new report with the specified attributes
   var Report = JSReports.Report = ReportElement.extend({ 
 
+    // Override default constructor to initialize a `Report` model
+    constructor: function(attributes, options) {
+      // parameters
+      if (_.has(attributes, 'parameters')) {
+        this.attributes.parameters = new Parameters(this.attributes.parameters);
+      }
+      Backbone.Model.apply(this, arguments);
+    },
+
     // Set some defaults
     defaults: {
       name: 'MyReport',
@@ -95,6 +106,39 @@
     }
 
   });
+
+  // A `Parameter` is used to pass data to the report and is available via
+  // `$P{<parameter name>} to expressions and the query string.
+  var Parameter = Backbone.Model.extend({
+    
+    // Set defaults
+    defaults: {
+      type: 'String',
+      prompt: true
+    }
+
+  });
+
+  // A collection of `Parameter`s
+  var Parameters = Backbone.Collection.extend({
+    
+    // `Parameter` model
+    model: Parameter
+
+  });
+
+  // Report `Band`
+  var Band = ReportElement.extend({
+
+    // Set defaults    
+    defaults: {
+      height: 0,
+      elements: []
+    }
+
+  });
+
+  // 
 
   // JSReports.Row
   // -------------
