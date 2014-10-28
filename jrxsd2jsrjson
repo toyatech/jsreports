@@ -1,0 +1,39 @@
+#!/usr/local/bin/node
+
+var fs = require('fs')
+  , _ = require('underscore')
+  , parser  = require('xml2json');
+
+var filename = 'jasperreport.xsd';
+
+var xsd = fs.readFileSync(filename);
+
+var obj = parser.toJson(xsd, { object: true });
+
+var jsd = {};
+
+var transformer = {
+  element: function() {
+  }
+}
+
+function transform(obj) {
+  _.each(obj, function(value, key) {
+    _.isEmpty(value) {
+      delete obj[key];
+    }
+    if (_.isObject(value)) {
+      if (_.isEmpty(value)) {
+        delete obj[key];
+      } else {
+        transform(value);
+      }
+    } else if (_.isArray(value)) {
+      if (_.isEmpty(value) {
+      _.each(value, function(element, index) {
+      });
+    }
+  });
+}
+
+console.log(JSON.stringify(obj, null, 2));
