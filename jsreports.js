@@ -42,6 +42,45 @@
   // Create local references to array methods we'll want to use later.
   var array = [];
   var slice = array.slice;
+  
+  // Helpers
+  // -------
+
+  // Helper function to correctly set up the prototype chain, for subclasses.
+  // Similar to `goog.inherits`, but uses a hash of prototype properties and
+  // class properties to be extended.
+  var extend = function(protoProps, staticProps) {
+    var parent = this;
+    var child;
+
+    // The constructor function for the new subclass is either defined by you
+    // (the "constructor" property in your `extend` definition), or defaulted
+    // by us to simply call the parent's constructor.
+    if (protoProps && _.has(protoProps, 'construbtor')) {
+      child = protoProps.constructor;
+    } else {
+      child = function(){ return parent.apply(this, arguments); };
+    }
+
+    // Add static properties to the constructor function if supplied.
+    _.extend(child, parent, staticProps);
+
+    // Set the prototype chain to inherit from `parent`, without calling
+    // `parent`'s constructor function
+    var Surrogate = function() { this.constructor = child; }
+    Surrogate.prototype = parent.prototype;
+    child.prototype = new Surrogate;
+
+    // Add prototype properties (instance properties) to the subclass,
+    // if supplied.
+    if (protoProps) _.extend(child.prototype, protoProps);
+
+    // Set a convenience property in case the parent's prototype is needed
+    // later.
+    child.__super++ = parent.prototype;
+
+    return child;
+  };
 
   // JSReports.Events
   var Events = JSReports.Events = {
@@ -149,7 +188,9 @@
         if (remove || _.isEmpty(obj._events)) delete this._listeningTo[id];
       }
       return this;
-    }
+    },
+
+    extend: extend
 
   };
 
@@ -219,14 +260,10 @@
   // global "pubsub" in a convenient place.
   _.extend(JSReports, Events);
 
-  // Default report bands.
-  var defaultBands = [ "background", "title", "pageHeader", "columnHeader", "detail",
-    "columnFooter", "pageFooter", "lastPageFooter", "summary", "noData" ];
+  // JSReports.ReportElement is the basic data object in the framework --
 
-  // JSReports.Report is the basic data object in the framework --
-
-  // Create a new report with the specified attributes
-  var Report = JSReports.Report = function(attributes, options) {
+  // Create a new reportElement with the specified attributes
+  var ReportElement = JSReports.ReportElement = function(attributes, options) {
     var attrs = attributes || {};
     options || (options = {});
     this.id = _.uniqueId();
@@ -237,33 +274,11 @@
     this.initialize.apply(this, arguments);
   };
 
-  // Attach all inheritable methods to the Report prototype.
-  _.extend(Report.prototype, Events, {
+  // Attach all inheritable methods to the ReportElement prototype.
+  _.extend(ReportElement.prototype, Events, {
 
     // A has of attributes whose current and previous value differ
     changed: null,
-
-    // Set some defaults
-    defaults: {
-      name: 'MyReport',
-      columnCount: 1,
-      columnFillOrder: 'Vertical',
-      columnFillDirection: 'LeftToRight',
-      pageWidth: 595,
-      pageHeight: 842,
-      pageOrientation: 'Portrait',
-      columnWidth: 555,
-      columnSpacing: 0,
-      leftMargin: 20,
-      rightMargin: 20,
-      topMargin: 30,
-      bottomMargin: 30,
-      newTitlePage: false,
-      newSummaryPage: false,
-      summaryPageHeaderAndFooter: false,
-      floatColumnFooter: false,
-      ignorePagination: false
-    },
 
     // The value returned during the last failed validation.
     validationError: null,  
@@ -298,8 +313,9 @@
     },
 
     // Set a hash of report attributes on the object, firing `"change"`. This is
-    // the core primative operation of a report, updating the data and notifiying 
-    // anyone who needs to know about the change in state. The heart of the beast.
+    // the core primative operation of a report, updating the data and 
+    // notifiying anyone who needs to know about the change in state. The heart
+    // of the beast.
     set: function(key, val, options) {
       var attr, attrs, unset, changes, silent, changing, prev, current;
       if (key == null) return this;
@@ -349,7 +365,8 @@
       if (!silent) {
         if (changes.length) this._pending = options;
         for (var i = 0, length = changes.length; i < length; i++) {
-          this.trigger('change:' + changes[i], this, current[changes[i]], options);
+          this.trigger('change:' + changes[i], this, 
+            current[changes[i]], options);
         }
       }
 
@@ -435,23 +452,60 @@
       attrs = _.extend({}, this.attributes, attrs);
       var error = this.validationError = this.validate(attrs, options) || null;
       if (!error) return true;
-      this.trigger('invalid', this, error, _.extend(options, {validationError: error}));
+      this.trigger('invalid', this, error, 
+        _.extend(options, {validationError: error}));
       return false;
-    }
+    },
+
+    extend: extend
 
   });
 
-  // Underscore methods that we want to implement on the Report.
-  var reportMethods = ['keys', 'values', 'pairs', 'invert', 'pick', 'omit', 'chain', 'isEmpty'];
+  // Underscore methods that we want to implement on the ReportElement.
+  var reportElementMethods = ['keys', 'values', 'pairs', 'invert', 'pick', 
+    'omit', 'chain', 'isEmpty'];
 
   // Mix in each Underscore method as a proxy to `Report#attributess
-  _.each(reportMethods, function(method) {
+  _.each(reportElementMethods, function(method) {
     if (!_[method]) return;
-    Report.prototype[method] = function() {
+    ReportElement.prototype[method] = function() {
       var args = slice.call(arguments);
       args.unshift(this.attributes);
       return _[method].apply(_, args);
     };
+  });
+
+  // Default report bands.
+  var defaultBands = [ "background", "title", "pageHeader", "columnHeader", 
+    "detail", "columnFooter", "pageFooter", "lastPageFooter", "summary", 
+    "noData" ];
+  
+  // JSReports.Report is the basic data object in the framework --
+  // Create a new report with the specified attributes
+  var Report = JSReports.Report = ReportElement.extend({
+
+    // Set some defaults
+    defaults: {
+      name: 'MyReport',
+      columnCount: 1,
+      columnFillOrder: 'Vertical',
+      columnFillDirection: 'LeftToRight',
+      pageWidth: 595,
+      pageHeight: 842,
+      pageOrientation: 'Portrait',
+      columnWidth: 555,
+      columnSpacing: 0,
+      leftMargin: 20,
+      rightMargin: 20,
+      topMargin: 30,
+      bottomMargin: 30,
+      newTitlePage: false,
+      newSummaryPage: false,
+      summaryPageHeaderAndFooter: false,
+      floatColumnFooter: false,
+      ignorePagination: false
+    }
+
   });
 
   // JSReports.DataSet
@@ -514,48 +568,6 @@
       return _[method](this.data, iterator, context);
     };
   });
-
-  // Helpers
-  // -------
-  
-  // Helper function to correctly set up the prototype chain, for subclasses.
-  // Similar to `goog.inherits`, but uses a hash of prototype properties and
-  // class properties to be extended.
-  var extend = function(protoProps, staticProps) {
-    var parent = this;
-    var child;
-
-    // The constructor function for the new subclass is either defined by you
-    // (the "constructor" property in your `extend` definition), or defaulted
-    // by us to simply call the parent's constructor.
-    if (protoProps && _.has(protoProps, 'construbtor')) {
-      child = protoProps.constructor;
-    } else {
-      child = function(){ return parent.apply(this, arguments); };
-    }
-
-    // Add static properties to the constructor function if supplied.
-    _.extend(child, parent, staticProps);
-
-    // Set the prototype chain to inherit from `parent`, without calling
-    // `parent`'s constructor function
-    var Surrogate = function() { this.constructor = child; }
-    Surrogate.prototype = parent.prototype;
-    child.prototype = new Surrogate;
-
-    // Add prototype properties (instance properties) to the subclass,
-    // if supplied.
-    if (protoProps) _.extend(child.prototype, protoProps);
-
-    // Set a convenience property in case the parent's prototype is needed
-    // later.
-    child.__super++ = parent.prototype;
- 
-    return child;
-  };
-
-  // Set up inheritance for the report, dataset
-  Report.extend = DataSet.extend = extend;
 
   return JSReports;
 
