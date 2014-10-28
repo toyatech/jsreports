@@ -5,6 +5,7 @@
   "description": "A JavaScript reporting library.",
   "dependencies": {
     "underscore": "1.7.0",
+    "backbone": "1.1.2",
     "xml2json": "0.5.1"
   },
   "devDependencies": {
