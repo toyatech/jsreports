@@ -12,28 +12,58 @@ var obj = parser.toJson(xsd, { object: true });
 
 var jsd = {};
 
-var transformer = {
-  element: function() {
+var names = {
+  jasperReport: 'report'
+}
+
+var skips = ['import'];
+
+var transformations = {
+  schema: function(schema, jsd, next) {
+    jsd['definitions'] = {};
+    next(schema, jsd);
+  },
+  element: function(element, jsd, next) {
+
+    if (_.isArray(element)) {
+      _.forEach(element, function(element) {
+        transformations.element.call(this, element);
+      });
+    }
+
+    // name element
+    if (_.has(element, 'name')) {  
+    }
+
+  },
+  complexType: function(complexType, jsd, next) {
+    next(complexType, jsd);
+  },
+  sequence: function(sequence, jsd, next) {
+    next(sequence, jsd);
   }
 }
 
-function transform(obj) {
-  _.each(obj, function(value, key) {
-    _.isEmpty(value) {
-      delete obj[key];
-    }
-    if (_.isObject(value)) {
-      if (_.isEmpty(value)) {
-        delete obj[key];
-      } else {
-        transform(value);
-      }
-    } else if (_.isArray(value)) {
-      if (_.isEmpty(value) {
-      _.each(value, function(element, index) {
+function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function formatName(name) {
+  return _.has(names, name) ? capitalize(names[name]) : capitalize(name);
+}
+
+function transform(obj, jsd) {
+  _.forEach(obj, function(value, key) {
+    if (_.has(transformations, key)) {
+      transformations[key].call(this, value, jsd, function(value, jsd) {
+        if (_.isObject(value)) {
+          transform(value, jsd);
+        }
       });
     }
   });
 }
 
-console.log(JSON.stringify(obj, null, 2));
+transform(obj, jsd);
+
+console.log(JSON.stringify(jsd, null, 2));

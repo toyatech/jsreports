@@ -1,6 +1,7 @@
 #!/usr/local/bin/node
 
 var fs = require('fs')
+  , _ = require('underscore')
   , parser  = require('xml2json');
 
 var filename = process.argv[2];
@@ -28,7 +29,18 @@ for (var f in format) {
 }
 
 for (var i = 0; i < bands.length; ++i) {
-  ret[bands[i]] = ret[bands[i]].band;
+  var band = ret[bands[i]].band;
+  ret[bands[i]] = {height: band.height, elements: [] };
+  delete band.height;
+  _.each(bands, function(e) {
+    if (_.isObject(bands[e])) {
+      ret[bands[i]].elements.push(bands[e]);
+    } else if (_.isArray(bands[e])) {
+      for (var a in bands[e]) {
+        ret[bands[i]].elements.push(bands[e][a]);
+      }
+    }
+  }
 }
 
 for (var i = 0; i < ret.groups.length; ++i) {
@@ -43,6 +55,13 @@ function transform(obj) {
         delete obj[key];
       } else {
         transform(obj[key]);
+      }
+    }
+    if (typeof obj[key] === 'string') {
+      obj[key] = _.unescape(_.unescape(obj[key]));
+      if (obj[key] === "") {
+        delete obj[key];
+        continue;
       }
     }
     if (key === 'class') {
@@ -63,36 +82,17 @@ function transform(obj) {
 
 function mapType(type) {
   var map = {
-    Timestamp: 'Date',
-    Long: 'Number',
-    Double: 'Number',
-    Float: 'Number',
-    Integer: 'Number'
+    'String': 'String',
+    'Timestamp': 'Date',
+    'Long': 'Number',
+    'Double': 'Number',
+    'Float': 'Number',
+    'Integer': 'Number'
   }; 
   if (Object.keys(map).indexOf(type)) {
     return map[type];
   }
 }
-
-// adapted from underscore.js
-function unescape(string) {
-  var map = {
-    '&amp;': '&',
-    '&lt;': '<',
-    '&gt;': '>',
-    '&quot;': '"',
-    '&#x27;': "'",
-    '&#x60;': '`'
-  };
-  var escaper = function(match) {
-    return map[match];
-  };
-  var source = '(?:' + Object.keys(map).join('|') + ')';
-  var testRegexp = RegExp(source);
-  var replaceRegexp = RegExp(source, 'g');
-  string = string == null ? '' : '' + string;
-  return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
-};
 
 transform(ret);
 
