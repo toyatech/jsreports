@@ -1,9 +1,21 @@
 #!/usr/local/bin/node
 
 var fs = require('fs')
-  , _ = require('underscore')
+  , _ = require('lodash')
   , parser = require('xml2json')
   , pluralize = require('pluralize');
+
+_.mixin(require('lodash-deep'));
+_.mixin({
+  capitalize: function(string) {
+    return string.charAt(0).toUpperCase() + string.substring(1);
+  },
+  pluralize: pluralize
+});
+
+var options = {
+  descriptions: false
+};
 
 var filename = 'jasperreport.xsd';
 
@@ -14,25 +26,79 @@ var obj = parser.toJson(xsd, { object: true });
 var jsd = {};
 
 var names = {
-  jasperReport: 'report'
+  jasperReport: 'report',
+  LTR: 'LeftToRight',
+  RTL: 'RightToLeft',
+  scriptletClass: 'scriptlet',
+  resourceBundle: 'resource',
+  formatFactoryClass: 'formatFactory',
+  hAlign: 'horizontalAlignment',
+  vAlign: 'verticalAlignment',
+  isTitleNewPage: 'titleNewPage',
+  isSummaryNewPage: 'summaryNewPage',
+  isSummaryWithPageHeaderAndFooter: 'summaryWithPageHeaderAndFooter',
+  isFloatColumnFooter: 'floatColumnFooter',
+  isIgnorePagination: 'ignorePagination',
+  isDefault: 'default',
+  isBold: 'bold',
+  isItalic: 'italic',
+  isUnderline: 'underline',
+  isStrikeThrough: 'strikeThrough',
+  isPdfEmbedded: 'pdfEmbedded',
+  isStyledText: 'styledText',
+  isBlankWhenNull: 'blankWhenNull',
+  isForPrompting: 'prompt',
+  isStartNewColumn: 'startNewColumn',
+  isStartNewPage: 'startNewPage',
+  isResetPageNumber: 'resetPageNumber',
+  isReprintHeaderOnEachPage: 'reprintHeaderOnEachPage',
+  isSplitAllowed: 'splitAllowed',
+  isPrintRepeatedValues: 'printRepeatedValues',
+  isRemoveLineWhenBlank: 'removeLineWhenBlank',
+  isPrintInFirstWholeBand: 'printInFirstWholeBand',
+  isPrintWhenDetailOverflows: 'printWhenDetailOverflows',
+  isUsingCache: 'usingCache',
+  isLazy: 'lazy',
+  isStretchWithOverflow: 'stretchWithOverflow',
+  isShowLegend: 'showLegend',
+  isShowLabels: 'showLabels',
+  isCircular: 'circular',
+  isShowTickMarks: 'showTickMarks',
+  isShowTickLabels: 'showTickLabels',
+  isShowLines: 'showLines',
+  isShowShapes: 'showShapes',
+  isShowCloseTicks: 'showCloseTicks',
+  isShowOpenTicks: 'showOpenTicks',
+  isShowVolume: 'showVolume',
+  isShowValueLines: 'showValueLines',
+  isRepeatColumnHeaders: 'repeatColumnHeaders',
+  isRepeatRowHeaders: 'repeatRowHeaders',
+  isDataPreSorted: 'dataPreSorted'
 }
 
 var bands = [ 'background', 'title', 'pageHeader', 'columnHeader', 'detail', 'columnFooter', 
   'pageFooter', 'lastPageFooter', 'summary', 'noData' ];
 
-var skips = ['import'];
+var skips = ['import', 'language', 'propertyExpression', 'conditionExpression', 'template'];
 
-function capitalize(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
+var attributeSkips = [ 'language', 'template' ];
+
+var elementSkips = ['import', 'propertyExpression', 'template'];
 
 function formatName(name) {
-  return _.has(names, name) ? capitalize(names[name]) : capitalize(name);
+  return _.has(names, name) ? names[name] : name;
 }
 
 function formatReference(reference) {
   return reference.slice(3);
-} 
+}
+
+function isDeprecated(attribute) {
+  if (_.deepHas(attribute, 'annotation.documentation.i')) {
+    return (attribute.annotation.documentation !== 'Deprecated');
+  }
+  return false;
+}
 
 var typeMap = {
   'string': { 'type': 'string' },
@@ -47,127 +113,203 @@ var typeMap = {
   'nonNegativeInteger': { 'type': 'integer', 'minimum': 0, 'exclusiveMinimum': false }
 };
 
-var NMTOKEN = {};
+var tokenMap = {};
 
-function formatNMTOKEN(name) {
-  if (_.has(NMTOKEN, name)) {
-    return NMTOKEN[name];
-  } else {
-    return typeMap.integer;
-  }
-}
+var switchMap = {
+  conditionExpression: typeMap.string
+} 
 
-function formatType(type, name) {
-  if (_.has(typeMap, type)) {
-    return typeMap[type];
-  } else if (type === 'NMTOKEN') {
-    return formatNMTOKEN(name);
+function formatType(attribute) {
+  if (_.has(typeMap, attribute.type)) {
+    return typeMap[attribute.type];
+  } else if (attribute.type === 'NMTOKEN') {
+    if (_.has(tokenMap, attribute.name)) {
+      return tokenMap[attribute.name]
+    } else {
+      return typeMap.integer;
+    }
   } else {
     return {};
   }
 }
 
-function formatSimpleType(simpleType) {
-  if (_.has(simpleType, 'restriction')) {
-    if (_.has(simpleType.restriction, 'enumeration')) {
-      var t = { 'type': 'string', 'enum': [] };
+function formatSimpleType(attribute) {
+  var simpleType = attribute.simpleType;
+  if (_.deepHas(simpleType, 'restriction.enumeration')) {
+    var t = {};
+    if (attribute.name.slice(0,2) === 'is' && _.isBoolean(simpleType.restriction.enumeration[0].value)) {
+      _.extend(t, { 'type': 'boolean' });
+    } else {
+      _.extend(t, { 'type': 'string', 'enum': [] });
       var d = [];
       if (_.isArray(simpleType.restriction.enumeration)) {
         _.forEach(simpleType.restriction.enumeration, function(element) {
-          t.enum.push(element.value);
-          if (_.has(element, 'annotation')) {
-            if (_.has(element.annotation, 'documentation')) {
-              d.push(element.value + ': ' + element.annotation.documentation);
+          t.enum.push(formatName(element.value));
+          if (options.description) {
+            if (_.has(element, 'annotation')) {
+              if (_.has(element.annotation, 'documentation')) {
+                d.push(element.value + ': ' + element.annotation.documentation);
+              }
             }
           }
         });
+      } else {
+        t.enum.push(formatName(simpleType.restriction.enumeration.value));
       }
-      if (!_.isEmpty(d)) {
-        t.description = d.join('\n');
-      }
-      return t;
     }
+    if (!_.isEmpty(d)) {
+      t.description = d.join('\n');
+    }
+    return t;
   }
 }
 
-jsd.definitions = {};
+// format an attribute
+function formatAttribute(attribute) {
+  var o = {};
+  
+  // format types
+  if (_.has(attribute, 'type')) {
+    _.extend(o, formatType(attribute));
+  } else if (_.has(attribute, 'simpleType')) {
+    _.extend(o, formatSimpleType(attribute));
+  }
 
+  // add default if available
+  if (_.has(attribute, 'default')) {
+    _.extend(o, { default: formatName(attribute.default) });
+  }
+
+  // add documentation if available
+  if (options.description) {
+    if (_.deepHas(attribute, 'annotation.documentation')) {
+      _.extend(o, { description: attribute.annotation.documentation });
+    }
+  }
+
+  // mark if required
+  if (_.has(attribute, 'use')) {
+    _.extend(o, { required: (attribute.use === 'required') });
+  }
+
+  return o;
+}
+
+// format an element
+function formatElement(element) {
+  var o = {};
+
+  // set reference name
+  if (_.has(element, 'ref')) {
+    _.extend(o, { name: formatReference(element.ref) });
+  } else if (_.has(element, 'name')) {
+    _.extend(o, { name: element.name });
+  }
+
+  // if we are not skipping this element
+  if (!_.contains(skips, o.name)) {
+  
+    // if we can have many of these elements
+    if (_.has(switchMap, o.name)) {
+      
+      _.deepSet(o, 'value', switchMap[o.name]);
+
+    // if we can have many of these elements
+    } else if (element.maxOccurs === 'unbounded') {
+                    
+      // set type to array
+      _.deepSet(o, 'value.type', 'array');
+    
+      // add a reference
+      _.deepSet(o, 'value.items.$ref', '#/definitions/' + _.capitalize(formatName(o.name)));
+
+      // make name plural
+      o.name = _.pluralize(o.name);
+
+    // if we can only have at most one of these elements
+    } else if (element.maxOccurs === 1) {
+
+      // set type to object
+      _.deepSet(o, 'value.type', 'object');
+
+      // collapse bands
+      if (_.contains(bands, o.name)) {
+        _.deepSet(o, 'value.oneOf', [ { '$ref': '#/definitions/Band' } ]);
+      
+      // else add reference
+      } else {
+        _.deepSet(o, 'value.oneOf', [ { '$ref': '#/definitions/' + _.capitalize(formatName(o.name)) } ]);
+      }
+    } else {
+      _.deepSet(o, 'value.oneOf', [ { '$ref': '#/definitions/' + _.capitalize(formatName(o.name)) } ]);
+    }
+  }
+  return o;
+}
+
+// add definitions to schema
+_.extend(jsd, { definitions: {} });
+
+// loop over top level elements
 _.forEach(obj.schema.element, function(element, index) {
   var s = {type: "object", properties: {}};
-  var required = [];
+  var r = [];
+  
+  // if element not skipped and not a band
   if (!_.contains(skips, element.name) && !_.contains(bands, element.name)) {
+
+    // if element has complexType
     if (_.has(element, 'complexType')) {
+
+      // if complexType has attribute
       if (_.has(element.complexType, 'attribute')) {
+
+        // and if attribute is an array
         if (_.isArray(element.complexType.attribute)) {
-          _.forEach(element.complexType.attribute, function(element) {
-            var o = {};
 
-            // format types
-            if (_.has(element, 'type')) {
-              o = formatType(element.type, element.name);
-            } else if (_.has(element, 'simpleType')) {
-              o = formatSimpleType(element.simpleType);
+          // loop over the attributes array formatting each one
+          _.forEach(element.complexType.attribute, function(attribute) {
+
+            // if attribute not skipped and not deprecated
+            if (!_.contains(skips, attribute.name) && !isDeprecated(attribute)) {
+              var a = formatAttribute(attribute);
+              if (a.required) r.push(attribute.name);
+              delete a.required;
+              s.properties[formatName(attribute.name)] = a;
             }
-            // add default if available
-            if (_.has(element, 'default')) { 
-              o.default = element.default
-            }
-            // add documentation if available
-            if (_.has(element, 'annotation')) {
-              if (_.has(element.annotation, 'documentation')) {
-                if (_.has(o, 'description')) {
-                  o.description = element.annotation.documentation + '\n' + o.description;
-                } else {
-                  o.description = element.annotation.documentation;
-                }
-              }
-            }
-            // mark if required
-            if (_.has(element, 'use')) {
-              if (element.use === 'required') {
-                required.push(element.name);
-              }
-            }
-            s.properties[element.name] = o
+
           });
-        }
-      } 
-      if (_.has(element.complexType, 'sequence')) {
-        if (_.has(element.complexType.sequence, 'element')) {
-          if (_.isArray(element.complexType.sequence.element)) {
-            _.forEach(element.complexType.sequence.element, function(element) {
-              if (_.has(element, 'ref')) {
-                var key = formatReference(element.ref);
-                if (!_.contains(skips, key)) {
-                  var o = {};
-                  if (element.maxOccurs === 'unbounded') {
-                    o.type = 'array';
-                    o.items = { '$ref': '#/definitions/' + formatName(key) };
-                    key = pluralize(key);
-                  } else if (element.maxOccurs === 1) {
 
-                    o.type = 'object';
-
-                    // collapse bands
-                    if (_.contains(bands, key)) {
-                      o.oneOf = [ { '$ref': '#/definitions/Band' } ];
-                    } else {
-                      o.oneOf = [ { '$ref': '#/definitions/' + formatName(key) } ];
-                    }
-                  }
-                  s.properties[key] = o;
-                }
-              }
-            });
-          }
         }
+
       }
+ 
+      // if complexType has sequence.element
+      if (_.deepHas(element.complexType, 'sequence.element')) {
+   
+        // and if element is an array
+        if (_.isArray(element.complexType.sequence.element)) {
+
+          // loop over the elements array formatting each one
+          _.forEach(element.complexType.sequence.element, function(el) {
+            var o = formatElement(el);
+            s.properties[formatName(o.name)] = o.value;
+          });
+
+        }
+
+      }
+
     }
-    if (!_.isEmpty(required)) {
-      s.required = required;
-    }
-    jsd.definitions[formatName(element.name)] = s;
+
+    // add required attributes
+    if (!_.isEmpty(r)) s.required = r;
+
+    // add definition to schema
+    jsd.definitions[_.capitalize(formatName(element.name))] = s;
+
   }
+
 });
 
 console.log(JSON.stringify(jsd, null, 2));
