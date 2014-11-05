@@ -1,0 +1,5456 @@
+{
+  "definitions": {
+    "Report": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "columnCount": {
+          "type": "integer",
+          "default": 1
+        },
+        "printOrder": {
+          "type": "string",
+          "enum": [
+            "Vertical",
+            "Horizontal"
+          ],
+          "default": "Vertical"
+        },
+        "columnDirection": {
+          "type": "string",
+          "enum": [
+            "LeftToRight",
+            "RightToLeft"
+          ],
+          "default": "LeftToRight"
+        },
+        "pageWidth": {
+          "type": "integer",
+          "default": 595
+        },
+        "pageHeight": {
+          "type": "integer",
+          "default": 842
+        },
+        "orientation": {
+          "type": "string",
+          "enum": [
+            "Portrait",
+            "Landscape"
+          ],
+          "default": "Portrait"
+        },
+        "whenNoDataType": {
+          "type": "string",
+          "enum": [
+            "NoPages",
+            "BlankPage",
+            "AllSectionsNoDetail",
+            "NoDataSection"
+          ],
+          "default": "NoPages"
+        },
+        "columnWidth": {
+          "type": "integer",
+          "default": 555
+        },
+        "columnSpacing": {
+          "type": "integer",
+          "default": 0
+        },
+        "leftMargin": {
+          "type": "integer",
+          "default": 20
+        },
+        "rightMargin": {
+          "type": "integer",
+          "default": 20
+        },
+        "topMargin": {
+          "type": "integer",
+          "default": 30
+        },
+        "bottomMargin": {
+          "type": "integer",
+          "default": 30
+        },
+        "titleNewPage": {
+          "type": "boolean",
+          "default": false
+        },
+        "summaryNewPage": {
+          "type": "boolean",
+          "default": false
+        },
+        "summaryWithPageHeaderAndFooter": {
+          "type": "boolean",
+          "default": false
+        },
+        "floatColumnFooter": {
+          "type": "boolean",
+          "default": false
+        },
+        "scriptlet": {
+          "type": "string"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "whenResourceMissingType": {
+          "type": "string",
+          "enum": [
+            "Null",
+            "Empty",
+            "Key",
+            "Error"
+          ],
+          "default": "Null"
+        },
+        "ignorePagination": {
+          "type": "boolean",
+          "default": false
+        },
+        "formatFactory": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Property"
+          }
+        },
+        "reportFonts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReportFont"
+          }
+        },
+        "styles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Style"
+          }
+        },
+        "subDatasets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubDataset"
+          }
+        },
+        "scriptlets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Scriptlet"
+          }
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Parameter"
+          }
+        },
+        "queryString": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/QueryString"
+            }
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        },
+        "sortFields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SortField"
+          }
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Variable"
+          }
+        },
+        "filterExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/FilterExpression"
+            }
+          ]
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Group"
+          }
+        },
+        "background": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Band"
+            }
+          ]
+        },
+        "title": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Band"
+            }
+          ]
+        },
+        "pageHeader": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Band"
+            }
+          ]
+        },
+        "columnHeader": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Band"
+            }
+          ]
+        },
+        "detail": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Band"
+            }
+          ]
+        },
+        "columnFooter": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Band"
+            }
+          ]
+        },
+        "pageFooter": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Band"
+            }
+          ]
+        },
+        "lastPageFooter": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Band"
+            }
+          ]
+        },
+        "summary": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Band"
+            }
+          ]
+        },
+        "noData": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Band"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Property": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ReportFont": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "default": {
+          "type": "boolean",
+          "default": false
+        },
+        "fontName": {
+          "type": "string"
+        },
+        "size": {
+          "type": "integer"
+        },
+        "bold": {
+          "type": "boolean"
+        },
+        "italic": {
+          "type": "boolean"
+        },
+        "underline": {
+          "type": "boolean"
+        },
+        "strikeThrough": {
+          "type": "boolean"
+        },
+        "pdfFontName": {
+          "type": "string"
+        },
+        "pdfEncoding": {
+          "type": "string"
+        },
+        "pdfEmbedded": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Style": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "default": {
+          "type": "boolean"
+        },
+        "style": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "Opaque",
+            "Transparent"
+          ]
+        },
+        "forecolor": {
+          "type": "string"
+        },
+        "backcolor": {
+          "type": "string"
+        },
+        "fill": {
+          "type": "string",
+          "enum": [
+            "Solid"
+          ]
+        },
+        "radius": {
+          "type": "integer"
+        },
+        "scaleImage": {
+          "type": "string",
+          "enum": [
+            "Clip",
+            "FillFrame",
+            "RetainShape",
+            "RealHeight",
+            "RealSize"
+          ]
+        },
+        "horizontalAlignment": {
+          "type": "string",
+          "enum": [
+            "Left",
+            "Center",
+            "Right",
+            "Justified"
+          ]
+        },
+        "verticalAlignment": {
+          "type": "string",
+          "enum": [
+            "Top",
+            "Middle",
+            "Bottom"
+          ]
+        },
+        "rotation": {
+          "type": "string",
+          "enum": [
+            "None",
+            "Left",
+            "Right",
+            "UpsideDown"
+          ]
+        },
+        "lineSpacing": {
+          "type": "string",
+          "enum": [
+            "Single",
+            "1_1_2",
+            "Double"
+          ]
+        },
+        "markup": {
+          "type": "string"
+        },
+        "fontName": {
+          "type": "string"
+        },
+        "fontSize": {
+          "type": "integer"
+        },
+        "bold": {
+          "type": "boolean"
+        },
+        "italic": {
+          "type": "boolean"
+        },
+        "underline": {
+          "type": "boolean"
+        },
+        "strikeThrough": {
+          "type": "boolean"
+        },
+        "pdfFontName": {
+          "type": "string"
+        },
+        "pdfEncoding": {
+          "type": "string"
+        },
+        "pdfEmbedded": {
+          "type": "boolean"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "blankWhenNull": {
+          "type": "boolean"
+        },
+        "pen": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Pen"
+            }
+          ]
+        },
+        "box": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Box"
+            }
+          ]
+        },
+        "paragraph": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Paragraph"
+            }
+          ]
+        },
+        "conditionalStyles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConditionalStyle"
+          }
+        }
+      }
+    },
+    "Pen": {
+      "type": "object",
+      "properties": {
+        "lineWidth": {
+          "type": "integer"
+        },
+        "lineStyle": {
+          "type": "string",
+          "enum": [
+            "Solid",
+            "Dashed",
+            "Dotted",
+            "Double"
+          ]
+        },
+        "lineColor": {
+          "type": "string"
+        }
+      }
+    },
+    "Paragraph": {
+      "type": "object",
+      "properties": {
+        "lineSpacing": {
+          "type": "string",
+          "enum": [
+            "Single",
+            "1_1_2",
+            "Double",
+            "AtLeast",
+            "Fixed",
+            "Proportional"
+          ]
+        },
+        "lineSpacingSize": {
+          "type": "integer"
+        },
+        "firstLineIndent": {
+          "type": "integer"
+        },
+        "leftIndent": {
+          "type": "integer"
+        },
+        "rightIndent": {
+          "type": "integer"
+        },
+        "spacingBefore": {
+          "type": "integer"
+        },
+        "spacingAfter": {
+          "type": "integer"
+        },
+        "tabStopWidth": {
+          "type": "integer"
+        }
+      }
+    },
+    "TabStop": {
+      "type": "object",
+      "properties": {
+        "alignment": {
+          "type": "string",
+          "enum": [
+            "Left",
+            "Center",
+            "Right"
+          ]
+        },
+        "position": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "position"
+      ]
+    },
+    "ConditionalStyle": {
+      "type": "object",
+      "properties": {
+        "style": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Style"
+            }
+          ]
+        }
+      }
+    },
+    "SubDataset": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "scriptlet": {
+          "type": "string"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "whenResourceMissingType": {
+          "type": "string",
+          "enum": [
+            "Null",
+            "Empty",
+            "Key",
+            "Error"
+          ],
+          "default": "Null"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Property"
+          }
+        },
+        "scriptlets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Scriptlet"
+          }
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Parameter"
+          }
+        },
+        "queryString": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/QueryString"
+            }
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        },
+        "sortFields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SortField"
+          }
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Variable"
+          }
+        },
+        "filterExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/FilterExpression"
+            }
+          ]
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Group"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Scriptlet": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "class": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Property"
+          }
+        },
+        "scriptletDescription": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ScriptletDescription"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "class"
+      ]
+    },
+    "ScriptletDescription": {
+      "type": "object",
+      "properties": {}
+    },
+    "Parameter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "class": {
+          "type": "string",
+          "default": "java.lang.String"
+        },
+        "nestedType": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "boolean",
+          "default": true
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Property"
+          }
+        },
+        "parameterDescription": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ParameterDescription"
+            }
+          ]
+        },
+        "defaultValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DefaultValueExpression"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ParameterDescription": {
+      "type": "object",
+      "properties": {}
+    },
+    "DefaultValueExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "QueryString": {
+      "type": "object",
+      "properties": {}
+    },
+    "Field": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "class": {
+          "type": "string",
+          "default": "java.lang.String"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Property"
+          }
+        },
+        "fieldDescription": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/FieldDescription"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "FieldDescription": {
+      "type": "object",
+      "properties": {}
+    },
+    "SortField": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "order": {
+          "type": "string",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Field",
+            "Variable"
+          ],
+          "default": "Field"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Variable": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "class": {
+          "type": "string",
+          "default": "java.lang.String"
+        },
+        "resetType": {
+          "type": "string",
+          "enum": [
+            "None",
+            "Report",
+            "Page",
+            "Column",
+            "Group"
+          ],
+          "default": "Report"
+        },
+        "resetGroup": {
+          "type": "string"
+        },
+        "incrementType": {
+          "type": "string",
+          "enum": [
+            "None",
+            "Report",
+            "Page",
+            "Column",
+            "Group"
+          ],
+          "default": "None"
+        },
+        "incrementGroup": {
+          "type": "string"
+        },
+        "calculation": {
+          "type": "string",
+          "enum": [
+            "Nothing",
+            "Count",
+            "DistinctCount",
+            "Sum",
+            "Average",
+            "Lowest",
+            "Highest",
+            "StandardDeviation",
+            "Variance",
+            "System",
+            "First"
+          ],
+          "default": "Nothing"
+        },
+        "incrementerFactoryClass": {
+          "type": "string"
+        },
+        "variableExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/VariableExpression"
+            }
+          ]
+        },
+        "initialValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/InitialValueExpression"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "VariableExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "InitialValueExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "FilterExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "Group": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "startNewColumn": {
+          "type": "boolean",
+          "default": false
+        },
+        "startNewPage": {
+          "type": "boolean",
+          "default": false
+        },
+        "resetPageNumber": {
+          "type": "boolean",
+          "default": false
+        },
+        "reprintHeaderOnEachPage": {
+          "type": "boolean",
+          "default": false
+        },
+        "minHeightToStartNewPage": {
+          "type": "integer",
+          "default": 0
+        },
+        "footerPosition": {
+          "type": "string",
+          "enum": [
+            "Normal",
+            "StackAtBottom",
+            "ForceAtBottom",
+            "CollateAtBottom"
+          ],
+          "default": "Normal"
+        },
+        "keepTogether": {
+          "type": "string",
+          "enum": [
+            true,
+            false
+          ],
+          "default": false
+        },
+        "groupExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GroupExpression"
+            }
+          ]
+        },
+        "groupHeader": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GroupHeader"
+            }
+          ]
+        },
+        "groupFooter": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GroupFooter"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "GroupExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "GroupHeader": {
+      "type": "object",
+      "properties": {}
+    },
+    "GroupFooter": {
+      "type": "object",
+      "properties": {}
+    },
+    "Band": {
+      "type": "object",
+      "properties": {
+        "height": {
+          "type": "integer",
+          "default": 0
+        },
+        "splitType": {
+          "type": "string",
+          "enum": [
+            "Stretch",
+            "Prevent",
+            "Immediate"
+          ]
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Property"
+          }
+        },
+        "printWhenExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/PrintWhenExpression"
+            }
+          ]
+        }
+      }
+    },
+    "Break": {
+      "type": "object",
+      "properties": {}
+    },
+    "Line": {
+      "type": "object",
+      "properties": {
+        "reportElement": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ReportElement"
+            }
+          ]
+        },
+        "graphicElement": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GraphicElement"
+            }
+          ]
+        }
+      }
+    },
+    "ReportElement": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "style": {
+          "type": "string"
+        },
+        "positionType": {
+          "type": "string",
+          "enum": [
+            "Float",
+            "FixRelativeToTop",
+            "FixRelativeToBottom"
+          ],
+          "default": "FixRelativeToTop"
+        },
+        "stretchType": {
+          "type": "string",
+          "enum": [
+            "NoStretch",
+            "RelativeToTallestObject",
+            "RelativeToBandHeight"
+          ],
+          "default": "NoStretch"
+        },
+        "printRepeatedValues": {
+          "type": "boolean",
+          "default": true
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "Opaque",
+            "Transparent"
+          ]
+        },
+        "x": {
+          "type": "integer"
+        },
+        "y": {
+          "type": "integer"
+        },
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        },
+        "removeLineWhenBlank": {
+          "type": "boolean",
+          "default": false
+        },
+        "printInFirstWholeBand": {
+          "type": "boolean",
+          "default": false
+        },
+        "printWhenDetailOverflows": {
+          "type": "boolean",
+          "default": false
+        },
+        "printWhenGroupChanges": {
+          "type": "string"
+        },
+        "forecolor": {
+          "type": "string"
+        },
+        "backcolor": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Property"
+          }
+        },
+        "printWhenExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/PrintWhenExpression"
+            }
+          ]
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ]
+    },
+    "PrintWhenExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "GraphicElement": {
+      "type": "object",
+      "properties": {
+        "stretchType": {
+          "type": "string",
+          "enum": [
+            "NoStretch",
+            "RelativeToTallestObject",
+            "RelativeToBandHeight"
+          ]
+        },
+        "fill": {
+          "type": "string",
+          "enum": [
+            "Solid"
+          ]
+        }
+      }
+    },
+    "Rectangle": {
+      "type": "object",
+      "properties": {
+        "reportElement": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ReportElement"
+            }
+          ]
+        },
+        "graphicElement": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GraphicElement"
+            }
+          ]
+        }
+      }
+    },
+    "Ellipse": {
+      "type": "object",
+      "properties": {
+        "reportElement": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ReportElement"
+            }
+          ]
+        },
+        "graphicElement": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GraphicElement"
+            }
+          ]
+        }
+      }
+    },
+    "Image": {
+      "type": "object",
+      "properties": {
+        "scaleImage": {
+          "type": "string",
+          "enum": [
+            "Clip",
+            "FillFrame",
+            "RetainShape",
+            "RealHeight",
+            "RealSize"
+          ]
+        },
+        "horizontalAlignment": {
+          "type": "string",
+          "enum": [
+            "Left",
+            "Center",
+            "Right"
+          ]
+        },
+        "verticalAlignment": {
+          "type": "string",
+          "enum": [
+            "Top",
+            "Middle",
+            "Bottom"
+          ]
+        },
+        "usingCache": {
+          "type": "boolean"
+        },
+        "lazy": {
+          "type": "boolean",
+          "default": false
+        },
+        "onErrorType": {
+          "type": "string",
+          "enum": [
+            "Error",
+            "Blank",
+            "Icon"
+          ],
+          "default": "Error"
+        },
+        "evaluationTime": {
+          "default": "Now"
+        },
+        "evaluationGroup": {
+          "type": "string"
+        },
+        "hyperlinkType": {
+          "type": "string"
+        },
+        "hyperlinkTarget": {
+          "type": "string"
+        },
+        "bookmarkLevel": {
+          "type": "integer",
+          "default": 0
+        },
+        "reportElement": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ReportElement"
+            }
+          ]
+        },
+        "box": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Box"
+            }
+          ]
+        },
+        "graphicElement": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GraphicElement"
+            }
+          ]
+        },
+        "imageExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ImageExpression"
+            }
+          ]
+        },
+        "anchorNameExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AnchorNameExpression"
+            }
+          ]
+        },
+        "hyperlinkReferenceExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkReferenceExpression"
+            }
+          ]
+        },
+        "hyperlinkWhenExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkWhenExpression"
+            }
+          ]
+        },
+        "hyperlinkAnchorExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkAnchorExpression"
+            }
+          ]
+        },
+        "hyperlinkPageExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkPageExpression"
+            }
+          ]
+        },
+        "hyperlinkTooltipExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkTooltipExpression"
+            }
+          ]
+        },
+        "hyperlinkParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HyperlinkParameter"
+          }
+        }
+      }
+    },
+    "ImageExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "Box": {
+      "type": "object",
+      "properties": {
+        "padding": {
+          "type": "integer"
+        },
+        "topPadding": {
+          "type": "integer"
+        },
+        "leftPadding": {
+          "type": "integer"
+        },
+        "bottomPadding": {
+          "type": "integer"
+        },
+        "rightPadding": {
+          "type": "integer"
+        },
+        "pen": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Pen"
+            }
+          ]
+        },
+        "topPen": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TopPen"
+            }
+          ]
+        },
+        "leftPen": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LeftPen"
+            }
+          ]
+        },
+        "bottomPen": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/BottomPen"
+            }
+          ]
+        },
+        "rightPen": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RightPen"
+            }
+          ]
+        }
+      }
+    },
+    "TopPen": {
+      "type": "object",
+      "properties": {
+        "lineWidth": {
+          "type": "integer"
+        },
+        "lineStyle": {
+          "type": "string",
+          "enum": [
+            "Solid",
+            "Dashed",
+            "Dotted",
+            "Double"
+          ]
+        },
+        "lineColor": {
+          "type": "string"
+        }
+      }
+    },
+    "LeftPen": {
+      "type": "object",
+      "properties": {
+        "lineWidth": {
+          "type": "integer"
+        },
+        "lineStyle": {
+          "type": "string",
+          "enum": [
+            "Solid",
+            "Dashed",
+            "Dotted",
+            "Double"
+          ]
+        },
+        "lineColor": {
+          "type": "string"
+        }
+      }
+    },
+    "BottomPen": {
+      "type": "object",
+      "properties": {
+        "lineWidth": {
+          "type": "integer"
+        },
+        "lineStyle": {
+          "type": "string",
+          "enum": [
+            "Solid",
+            "Dashed",
+            "Dotted",
+            "Double"
+          ]
+        },
+        "lineColor": {
+          "type": "string"
+        }
+      }
+    },
+    "RightPen": {
+      "type": "object",
+      "properties": {
+        "lineWidth": {
+          "type": "integer"
+        },
+        "lineStyle": {
+          "type": "string",
+          "enum": [
+            "Solid",
+            "Dashed",
+            "Dotted",
+            "Double"
+          ]
+        },
+        "lineColor": {
+          "type": "string"
+        }
+      }
+    },
+    "AnchorNameExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "HyperlinkReferenceExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "HyperlinkWhenExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "HyperlinkAnchorExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "HyperlinkPageExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "HyperlinkTooltipExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "HyperlinkParameter": {
+      "type": "object",
+      "properties": {}
+    },
+    "HyperlinkParameterExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "StaticText": {
+      "type": "object",
+      "properties": {
+        "reportElement": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ReportElement"
+            }
+          ]
+        },
+        "box": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Box"
+            }
+          ]
+        },
+        "textElement": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TextElement"
+            }
+          ]
+        },
+        "text": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Text"
+            }
+          ]
+        }
+      }
+    },
+    "Text": {
+      "type": "object",
+      "properties": {}
+    },
+    "TextElement": {
+      "type": "object",
+      "properties": {
+        "textAlignment": {
+          "type": "string",
+          "enum": [
+            "Left",
+            "Center",
+            "Right",
+            "Justified"
+          ]
+        },
+        "verticalAlignment": {
+          "type": "string",
+          "enum": [
+            "Top",
+            "Middle",
+            "Bottom"
+          ]
+        },
+        "rotation": {
+          "type": "string",
+          "enum": [
+            "None",
+            "Left",
+            "Right",
+            "UpsideDown"
+          ]
+        },
+        "lineSpacing": {
+          "type": "string",
+          "enum": [
+            "Single",
+            "1_1_2",
+            "Double"
+          ]
+        },
+        "markup": {
+          "type": "string"
+        },
+        "font": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Font"
+            }
+          ]
+        },
+        "paragraph": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Paragraph"
+            }
+          ]
+        }
+      }
+    },
+    "Font": {
+      "type": "object",
+      "properties": {
+        "reportFont": {
+          "type": "string"
+        },
+        "fontName": {
+          "type": "string"
+        },
+        "size": {
+          "type": "integer"
+        },
+        "bold": {
+          "type": "boolean"
+        },
+        "italic": {
+          "type": "boolean"
+        },
+        "underline": {
+          "type": "boolean"
+        },
+        "strikeThrough": {
+          "type": "boolean"
+        },
+        "pdfFontName": {
+          "type": "string"
+        },
+        "pdfEncoding": {
+          "type": "string"
+        },
+        "pdfEmbedded": {
+          "type": "boolean"
+        }
+      }
+    },
+    "TextField": {
+      "type": "object",
+      "properties": {
+        "stretchWithOverflow": {
+          "type": "boolean",
+          "default": false
+        },
+        "evaluationTime": {
+          "default": "Now"
+        },
+        "evaluationGroup": {
+          "type": "string"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "blankWhenNull": {
+          "type": "boolean"
+        },
+        "hyperlinkType": {
+          "type": "string"
+        },
+        "hyperlinkTarget": {
+          "type": "string"
+        },
+        "bookmarkLevel": {
+          "type": "integer",
+          "default": 0
+        },
+        "reportElement": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ReportElement"
+            }
+          ]
+        },
+        "box": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Box"
+            }
+          ]
+        },
+        "textElement": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TextElement"
+            }
+          ]
+        },
+        "textFieldExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TextFieldExpression"
+            }
+          ]
+        },
+        "patternExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/PatternExpression"
+            }
+          ]
+        },
+        "anchorNameExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AnchorNameExpression"
+            }
+          ]
+        },
+        "hyperlinkReferenceExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkReferenceExpression"
+            }
+          ]
+        },
+        "hyperlinkWhenExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkWhenExpression"
+            }
+          ]
+        },
+        "hyperlinkAnchorExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkAnchorExpression"
+            }
+          ]
+        },
+        "hyperlinkPageExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkPageExpression"
+            }
+          ]
+        },
+        "hyperlinkTooltipExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkTooltipExpression"
+            }
+          ]
+        },
+        "hyperlinkParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HyperlinkParameter"
+          }
+        }
+      }
+    },
+    "TextFieldExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "PatternExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "Subreport": {
+      "type": "object",
+      "properties": {
+        "usingCache": {
+          "type": "boolean"
+        },
+        "runToBottom": {
+          "type": "string",
+          "enum": [
+            true,
+            false
+          ]
+        },
+        "overflowType": {
+          "type": "string",
+          "enum": [
+            "Stretch",
+            "NoStretch"
+          ]
+        },
+        "reportElement": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ReportElement"
+            }
+          ]
+        },
+        "parametersMapExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ParametersMapExpression"
+            }
+          ]
+        },
+        "subreportParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubreportParameter"
+          }
+        },
+        "returnValues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReturnValue"
+          }
+        },
+        "subreportExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SubreportExpression"
+            }
+          ]
+        }
+      }
+    },
+    "ParametersMapExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "SubreportParameter": {
+      "type": "object",
+      "properties": {}
+    },
+    "SubreportParameterExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "ReturnValue": {
+      "type": "object",
+      "properties": {
+        "subreportVariable": {
+          "type": "string"
+        },
+        "toVariable": {
+          "type": "string"
+        },
+        "calculation": {
+          "type": "string",
+          "enum": [
+            "Nothing",
+            "Count",
+            "DistinctCount",
+            "Sum",
+            "Average",
+            "Lowest",
+            "Highest",
+            "StandardDeviation",
+            "Variance",
+            "First"
+          ],
+          "default": "Nothing"
+        },
+        "incrementerFactoryClass": {
+          "type": "string"
+        }
+      }
+    },
+    "ConnectionExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "DataSourceExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "SubreportExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "ElementGroup": {
+      "type": "object",
+      "properties": {}
+    },
+    "Chart": {
+      "type": "object",
+      "properties": {
+        "showLegend": {
+          "type": "boolean"
+        },
+        "evaluationTime": {
+          "default": "Now"
+        },
+        "evaluationGroup": {
+          "type": "string"
+        },
+        "hyperlinkType": {
+          "type": "string"
+        },
+        "hyperlinkTarget": {
+          "type": "string"
+        },
+        "bookmarkLevel": {
+          "type": "integer",
+          "default": 0
+        },
+        "customizerClass": {
+          "type": "string"
+        },
+        "renderType": {
+          "type": "string"
+        },
+        "theme": {
+          "type": "string"
+        },
+        "reportElement": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ReportElement"
+            }
+          ]
+        },
+        "box": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Box"
+            }
+          ]
+        },
+        "chartTitle": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ChartTitle"
+            }
+          ]
+        },
+        "chartSubtitle": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ChartSubtitle"
+            }
+          ]
+        },
+        "chartLegend": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ChartLegend"
+            }
+          ]
+        },
+        "anchorNameExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AnchorNameExpression"
+            }
+          ]
+        },
+        "hyperlinkReferenceExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkReferenceExpression"
+            }
+          ]
+        },
+        "hyperlinkWhenExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkWhenExpression"
+            }
+          ]
+        },
+        "hyperlinkAnchorExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkAnchorExpression"
+            }
+          ]
+        },
+        "hyperlinkPageExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkPageExpression"
+            }
+          ]
+        },
+        "hyperlinkTooltipExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkTooltipExpression"
+            }
+          ]
+        },
+        "hyperlinkParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HyperlinkParameter"
+          }
+        }
+      }
+    },
+    "ChartTitle": {
+      "type": "object",
+      "properties": {
+        "position": {
+          "type": "string",
+          "enum": [
+            "Top",
+            "Bottom",
+            "Left",
+            "Right"
+          ]
+        },
+        "color": {
+          "type": "string"
+        },
+        "font": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Font"
+            }
+          ]
+        },
+        "titleExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TitleExpression"
+            }
+          ]
+        }
+      }
+    },
+    "TitleExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "ChartSubtitle": {
+      "type": "object",
+      "properties": {
+        "font": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Font"
+            }
+          ]
+        },
+        "subtitleExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SubtitleExpression"
+            }
+          ]
+        }
+      }
+    },
+    "SubtitleExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "ChartLegend": {
+      "type": "object",
+      "properties": {
+        "textColor": {
+          "type": "string"
+        },
+        "backgroundColor": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "Top",
+            "Bottom",
+            "Left",
+            "Right"
+          ]
+        }
+      }
+    },
+    "ItemLabel": {
+      "type": "object",
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "backgroundColor": {
+          "type": "string"
+        }
+      }
+    },
+    "PieChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "pieDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/PieDataset"
+            }
+          ]
+        },
+        "piePlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/PiePlot"
+            }
+          ]
+        }
+      }
+    },
+    "PieDataset": {
+      "type": "object",
+      "properties": {
+        "minPercentage": {
+          "type": "integer"
+        },
+        "maxCount": {
+          "type": "integer"
+        },
+        "dataset": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Dataset"
+            }
+          ]
+        },
+        "pieSeries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PieSeries"
+          }
+        },
+        "keyExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/KeyExpression"
+            }
+          ]
+        },
+        "valueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueExpression"
+            }
+          ]
+        },
+        "labelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LabelExpression"
+            }
+          ]
+        },
+        "sectionHyperlink": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SectionHyperlink"
+            }
+          ]
+        },
+        "otherKeyExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OtherKeyExpression"
+            }
+          ]
+        },
+        "otherLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OtherLabelExpression"
+            }
+          ]
+        },
+        "otherSectionHyperlink": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OtherSectionHyperlink"
+            }
+          ]
+        }
+      }
+    },
+    "PieSeries": {
+      "type": "object",
+      "properties": {
+        "keyExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/KeyExpression"
+            }
+          ]
+        },
+        "valueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueExpression"
+            }
+          ]
+        },
+        "labelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LabelExpression"
+            }
+          ]
+        },
+        "sectionHyperlink": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SectionHyperlink"
+            }
+          ]
+        }
+      }
+    },
+    "KeyExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "ValueExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "LabelExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "OtherKeyExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "OtherLabelExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "SectionHyperlink": {
+      "type": "object",
+      "properties": {
+        "hyperlinkType": {
+          "type": "string"
+        },
+        "hyperlinkTarget": {
+          "type": "string"
+        },
+        "hyperlinkReferenceExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkReferenceExpression"
+            }
+          ]
+        },
+        "hyperlinkWhenExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkWhenExpression"
+            }
+          ]
+        },
+        "hyperlinkAnchorExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkAnchorExpression"
+            }
+          ]
+        },
+        "hyperlinkPageExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkPageExpression"
+            }
+          ]
+        },
+        "hyperlinkTooltipExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkTooltipExpression"
+            }
+          ]
+        },
+        "hyperlinkParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HyperlinkParameter"
+          }
+        }
+      }
+    },
+    "OtherSectionHyperlink": {
+      "type": "object",
+      "properties": {
+        "hyperlinkType": {
+          "type": "string"
+        },
+        "hyperlinkTarget": {
+          "type": "string"
+        },
+        "hyperlinkReferenceExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkReferenceExpression"
+            }
+          ]
+        },
+        "hyperlinkWhenExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkWhenExpression"
+            }
+          ]
+        },
+        "hyperlinkAnchorExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkAnchorExpression"
+            }
+          ]
+        },
+        "hyperlinkPageExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkPageExpression"
+            }
+          ]
+        },
+        "hyperlinkTooltipExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkTooltipExpression"
+            }
+          ]
+        },
+        "hyperlinkParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HyperlinkParameter"
+          }
+        }
+      }
+    },
+    "PiePlot": {
+      "type": "object",
+      "properties": {
+        "showLabels": {
+          "type": "boolean"
+        },
+        "circular": {
+          "type": "boolean"
+        },
+        "labelFormat": {
+          "type": "string"
+        },
+        "legendLabelFormat": {
+          "type": "string"
+        },
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "itemLabel": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ItemLabel"
+            }
+          ]
+        }
+      }
+    },
+    "Dataset": {
+      "type": "object",
+      "properties": {
+        "resetType": {
+          "type": "string",
+          "enum": [
+            "None",
+            "Report",
+            "Page",
+            "Column",
+            "Group"
+          ]
+        },
+        "resetGroup": {
+          "type": "string"
+        },
+        "incrementType": {
+          "type": "string",
+          "enum": [
+            "None",
+            "Report",
+            "Page",
+            "Column",
+            "Group"
+          ],
+          "default": "None"
+        },
+        "incrementGroup": {
+          "type": "string"
+        },
+        "incrementWhenExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/IncrementWhenExpression"
+            }
+          ]
+        },
+        "datasetRun": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DatasetRun"
+            }
+          ]
+        }
+      }
+    },
+    "IncrementWhenExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "DatasetRun": {
+      "type": "object",
+      "properties": {
+        "subDataset": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Property"
+          }
+        },
+        "parametersMapExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ParametersMapExpression"
+            }
+          ]
+        },
+        "datasetParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DatasetParameter"
+          }
+        },
+        "returnValues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReturnValue"
+          }
+        }
+      },
+      "required": [
+        "subDataset"
+      ]
+    },
+    "DatasetParameter": {
+      "type": "object",
+      "properties": {}
+    },
+    "DatasetParameterExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "Plot": {
+      "type": "object",
+      "properties": {
+        "backcolor": {
+          "type": "string"
+        },
+        "orientation": {
+          "type": "string",
+          "enum": [
+            "Horizontal",
+            "Vertical"
+          ]
+        },
+        "backgroundAlpha": {
+          "type": "integer"
+        },
+        "foregroundAlpha": {
+          "type": "integer"
+        }
+      }
+    },
+    "SeriesColor": {
+      "type": "object",
+      "properties": {
+        "seriesOrder": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "seriesOrder",
+        "color"
+      ]
+    },
+    "Pie3DChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "pieDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/PieDataset"
+            }
+          ]
+        },
+        "pie3DPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Pie3DPlot"
+            }
+          ]
+        }
+      }
+    },
+    "Pie3DPlot": {
+      "type": "object",
+      "properties": {
+        "showLabels": {
+          "type": "boolean"
+        },
+        "depthFactor": {
+          "type": "string"
+        },
+        "circular": {
+          "type": "boolean"
+        },
+        "labelFormat": {
+          "type": "string"
+        },
+        "legendLabelFormat": {
+          "type": "string"
+        },
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "itemLabel": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ItemLabel"
+            }
+          ]
+        }
+      }
+    },
+    "BarChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "categoryDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryDataset"
+            }
+          ]
+        },
+        "barPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/BarPlot"
+            }
+          ]
+        }
+      }
+    },
+    "CategoryDataset": {
+      "type": "object",
+      "properties": {
+        "dataset": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Dataset"
+            }
+          ]
+        },
+        "categorySeries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CategorySeries"
+          }
+        }
+      }
+    },
+    "CategorySeries": {
+      "type": "object",
+      "properties": {
+        "seriesExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SeriesExpression"
+            }
+          ]
+        },
+        "categoryExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryExpression"
+            }
+          ]
+        },
+        "valueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueExpression"
+            }
+          ]
+        },
+        "labelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LabelExpression"
+            }
+          ]
+        },
+        "itemHyperlink": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ItemHyperlink"
+            }
+          ]
+        }
+      }
+    },
+    "SeriesExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "CategoryExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "ItemHyperlink": {
+      "type": "object",
+      "properties": {
+        "hyperlinkType": {
+          "type": "string"
+        },
+        "hyperlinkTarget": {
+          "type": "string"
+        },
+        "hyperlinkReferenceExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkReferenceExpression"
+            }
+          ]
+        },
+        "hyperlinkWhenExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkWhenExpression"
+            }
+          ]
+        },
+        "hyperlinkAnchorExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkAnchorExpression"
+            }
+          ]
+        },
+        "hyperlinkPageExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkPageExpression"
+            }
+          ]
+        },
+        "hyperlinkTooltipExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HyperlinkTooltipExpression"
+            }
+          ]
+        },
+        "hyperlinkParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HyperlinkParameter"
+          }
+        }
+      }
+    },
+    "BarPlot": {
+      "type": "object",
+      "properties": {
+        "showLabels": {
+          "type": "boolean"
+        },
+        "showTickMarks": {
+          "type": "boolean"
+        },
+        "showTickLabels": {
+          "type": "boolean"
+        },
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "itemLabel": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ItemLabel"
+            }
+          ]
+        },
+        "categoryAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryAxisLabelExpression"
+            }
+          ]
+        },
+        "categoryAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryAxisFormat"
+            }
+          ]
+        },
+        "valueAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisLabelExpression"
+            }
+          ]
+        },
+        "valueAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisFormat"
+            }
+          ]
+        },
+        "domainAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMinValueExpression"
+            }
+          ]
+        },
+        "domainAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMaxValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMinValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMaxValueExpression"
+            }
+          ]
+        }
+      }
+    },
+    "CategoryAxisLabelExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "ValueAxisLabelExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "DomainAxisMinValueExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "DomainAxisMaxValueExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "RangeAxisMinValueExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "RangeAxisMaxValueExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "CategoryAxisFormat": {
+      "type": "object",
+      "properties": {}
+    },
+    "ValueAxisFormat": {
+      "type": "object",
+      "properties": {}
+    },
+    "AxisFormat": {
+      "type": "object",
+      "properties": {
+        "labelColor": {
+          "type": "string"
+        },
+        "tickLabelColor": {
+          "type": "string"
+        },
+        "tickLabelMask": {
+          "type": "string"
+        },
+        "verticalTickLabels": {
+          "type": "boolean"
+        },
+        "axisLineColor": {
+          "type": "string"
+        },
+        "labelFont": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LabelFont"
+            }
+          ]
+        },
+        "tickLabelFont": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TickLabelFont"
+            }
+          ]
+        }
+      }
+    },
+    "LabelFont": {
+      "type": "object",
+      "properties": {}
+    },
+    "TickLabelFont": {
+      "type": "object",
+      "properties": {}
+    },
+    "Bar3DChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "categoryDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryDataset"
+            }
+          ]
+        },
+        "bar3DPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Bar3DPlot"
+            }
+          ]
+        }
+      }
+    },
+    "Bar3DPlot": {
+      "type": "object",
+      "properties": {
+        "showLabels": {
+          "type": "boolean"
+        },
+        "xOffset": {
+          "type": "string"
+        },
+        "yOffset": {
+          "type": "string"
+        },
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "itemLabel": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ItemLabel"
+            }
+          ]
+        },
+        "categoryAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryAxisLabelExpression"
+            }
+          ]
+        },
+        "categoryAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryAxisFormat"
+            }
+          ]
+        },
+        "valueAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisLabelExpression"
+            }
+          ]
+        },
+        "valueAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisFormat"
+            }
+          ]
+        },
+        "domainAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMinValueExpression"
+            }
+          ]
+        },
+        "domainAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMaxValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMinValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMaxValueExpression"
+            }
+          ]
+        }
+      }
+    },
+    "XyBarChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "barPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/BarPlot"
+            }
+          ]
+        }
+      }
+    },
+    "TimePeriodDataset": {
+      "type": "object",
+      "properties": {
+        "dataset": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Dataset"
+            }
+          ]
+        },
+        "timePeriodSeries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TimePeriodSeries"
+          }
+        }
+      }
+    },
+    "TimePeriodSeries": {
+      "type": "object",
+      "properties": {
+        "seriesExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SeriesExpression"
+            }
+          ]
+        },
+        "startDateExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/StartDateExpression"
+            }
+          ]
+        },
+        "endDateExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/EndDateExpression"
+            }
+          ]
+        },
+        "valueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueExpression"
+            }
+          ]
+        },
+        "labelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LabelExpression"
+            }
+          ]
+        },
+        "itemHyperlink": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ItemHyperlink"
+            }
+          ]
+        }
+      }
+    },
+    "StartDateExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "EndDateExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "StackedBarChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "categoryDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryDataset"
+            }
+          ]
+        },
+        "barPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/BarPlot"
+            }
+          ]
+        }
+      }
+    },
+    "StackedAreaChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "categoryDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryDataset"
+            }
+          ]
+        },
+        "areaPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AreaPlot"
+            }
+          ]
+        }
+      }
+    },
+    "StackedBar3DChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "categoryDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryDataset"
+            }
+          ]
+        },
+        "bar3DPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Bar3DPlot"
+            }
+          ]
+        }
+      }
+    },
+    "LineChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "categoryDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryDataset"
+            }
+          ]
+        },
+        "linePlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LinePlot"
+            }
+          ]
+        }
+      }
+    },
+    "LinePlot": {
+      "type": "object",
+      "properties": {
+        "showLines": {
+          "type": "boolean"
+        },
+        "showShapes": {
+          "type": "boolean"
+        },
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "categoryAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryAxisLabelExpression"
+            }
+          ]
+        },
+        "categoryAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryAxisFormat"
+            }
+          ]
+        },
+        "valueAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisLabelExpression"
+            }
+          ]
+        },
+        "valueAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisFormat"
+            }
+          ]
+        },
+        "domainAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMinValueExpression"
+            }
+          ]
+        },
+        "domainAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMaxValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMinValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMaxValueExpression"
+            }
+          ]
+        }
+      }
+    },
+    "XyLineChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "xyDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/XyDataset"
+            }
+          ]
+        },
+        "linePlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LinePlot"
+            }
+          ]
+        }
+      }
+    },
+    "XyDataset": {
+      "type": "object",
+      "properties": {
+        "dataset": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Dataset"
+            }
+          ]
+        },
+        "xySeries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/XySeries"
+          }
+        }
+      }
+    },
+    "XySeries": {
+      "type": "object",
+      "properties": {
+        "seriesExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SeriesExpression"
+            }
+          ]
+        },
+        "xValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/XValueExpression"
+            }
+          ]
+        },
+        "yValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/YValueExpression"
+            }
+          ]
+        },
+        "labelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LabelExpression"
+            }
+          ]
+        },
+        "itemHyperlink": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ItemHyperlink"
+            }
+          ]
+        }
+      }
+    },
+    "XValueExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "YValueExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "AreaChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "categoryDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryDataset"
+            }
+          ]
+        },
+        "areaPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AreaPlot"
+            }
+          ]
+        }
+      }
+    },
+    "AreaPlot": {
+      "type": "object",
+      "properties": {
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "categoryAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryAxisLabelExpression"
+            }
+          ]
+        },
+        "categoryAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CategoryAxisFormat"
+            }
+          ]
+        },
+        "valueAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisLabelExpression"
+            }
+          ]
+        },
+        "valueAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisFormat"
+            }
+          ]
+        },
+        "domainAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMinValueExpression"
+            }
+          ]
+        },
+        "domainAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMaxValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMinValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMaxValueExpression"
+            }
+          ]
+        }
+      }
+    },
+    "XyAreaChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "xyDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/XyDataset"
+            }
+          ]
+        },
+        "areaPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AreaPlot"
+            }
+          ]
+        }
+      }
+    },
+    "ScatterChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "xyDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/XyDataset"
+            }
+          ]
+        },
+        "scatterPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ScatterPlot"
+            }
+          ]
+        }
+      }
+    },
+    "ScatterPlot": {
+      "type": "object",
+      "properties": {
+        "showLines": {
+          "type": "boolean"
+        },
+        "showShapes": {
+          "type": "boolean"
+        },
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "xAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/XAxisLabelExpression"
+            }
+          ]
+        },
+        "xAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/XAxisFormat"
+            }
+          ]
+        },
+        "yAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/YAxisLabelExpression"
+            }
+          ]
+        },
+        "yAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/YAxisFormat"
+            }
+          ]
+        },
+        "domainAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMinValueExpression"
+            }
+          ]
+        },
+        "domainAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMaxValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMinValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMaxValueExpression"
+            }
+          ]
+        }
+      }
+    },
+    "XAxisLabelExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "YAxisLabelExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "XAxisFormat": {
+      "type": "object",
+      "properties": {}
+    },
+    "YAxisFormat": {
+      "type": "object",
+      "properties": {}
+    },
+    "BubbleChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "xyzDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/XyzDataset"
+            }
+          ]
+        },
+        "bubblePlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/BubblePlot"
+            }
+          ]
+        }
+      }
+    },
+    "XyzDataset": {
+      "type": "object",
+      "properties": {
+        "dataset": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Dataset"
+            }
+          ]
+        },
+        "xyzSeries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/XyzSeries"
+          }
+        }
+      }
+    },
+    "XyzSeries": {
+      "type": "object",
+      "properties": {
+        "seriesExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SeriesExpression"
+            }
+          ]
+        },
+        "xValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/XValueExpression"
+            }
+          ]
+        },
+        "yValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/YValueExpression"
+            }
+          ]
+        },
+        "zValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ZValueExpression"
+            }
+          ]
+        },
+        "itemHyperlink": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ItemHyperlink"
+            }
+          ]
+        }
+      }
+    },
+    "BubblePlot": {
+      "type": "object",
+      "properties": {
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "xAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/XAxisLabelExpression"
+            }
+          ]
+        },
+        "xAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/XAxisFormat"
+            }
+          ]
+        },
+        "yAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/YAxisLabelExpression"
+            }
+          ]
+        },
+        "yAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/YAxisFormat"
+            }
+          ]
+        },
+        "domainAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMinValueExpression"
+            }
+          ]
+        },
+        "domainAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMaxValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMinValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMaxValueExpression"
+            }
+          ]
+        }
+      }
+    },
+    "ZValueExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "TimeSeriesDataset": {
+      "type": "object",
+      "properties": {
+        "dataset": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Dataset"
+            }
+          ]
+        },
+        "timeSeries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TimeSeries"
+          }
+        }
+      }
+    },
+    "TimeSeries": {
+      "type": "object",
+      "properties": {
+        "seriesExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SeriesExpression"
+            }
+          ]
+        },
+        "timePeriodExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TimePeriodExpression"
+            }
+          ]
+        },
+        "valueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueExpression"
+            }
+          ]
+        },
+        "labelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LabelExpression"
+            }
+          ]
+        },
+        "itemHyperlink": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ItemHyperlink"
+            }
+          ]
+        }
+      }
+    },
+    "TimePeriodExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "TimeSeriesChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "timeSeriesDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TimeSeriesDataset"
+            }
+          ]
+        },
+        "timeSeriesPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TimeSeriesPlot"
+            }
+          ]
+        }
+      }
+    },
+    "TimeSeriesPlot": {
+      "type": "object",
+      "properties": {
+        "showLines": {
+          "type": "boolean"
+        },
+        "showShapes": {
+          "type": "boolean"
+        },
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "timeAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TimeAxisLabelExpression"
+            }
+          ]
+        },
+        "timeAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TimeAxisFormat"
+            }
+          ]
+        },
+        "valueAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisLabelExpression"
+            }
+          ]
+        },
+        "valueAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisFormat"
+            }
+          ]
+        },
+        "domainAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMinValueExpression"
+            }
+          ]
+        },
+        "domainAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMaxValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMinValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMaxValueExpression"
+            }
+          ]
+        }
+      }
+    },
+    "TimeAxisLabelExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "TimeAxisFormat": {
+      "type": "object",
+      "properties": {}
+    },
+    "HighLowChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "highLowDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HighLowDataset"
+            }
+          ]
+        },
+        "highLowPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HighLowPlot"
+            }
+          ]
+        }
+      }
+    },
+    "HighLowDataset": {
+      "type": "object",
+      "properties": {
+        "dataset": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Dataset"
+            }
+          ]
+        },
+        "seriesExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SeriesExpression"
+            }
+          ]
+        },
+        "dateExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DateExpression"
+            }
+          ]
+        },
+        "highExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HighExpression"
+            }
+          ]
+        },
+        "lowExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LowExpression"
+            }
+          ]
+        },
+        "openExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OpenExpression"
+            }
+          ]
+        },
+        "closeExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CloseExpression"
+            }
+          ]
+        },
+        "volumeExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/VolumeExpression"
+            }
+          ]
+        },
+        "itemHyperlink": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ItemHyperlink"
+            }
+          ]
+        }
+      }
+    },
+    "HighLowPlot": {
+      "type": "object",
+      "properties": {
+        "showCloseTicks": {
+          "type": "boolean"
+        },
+        "showOpenTicks": {
+          "type": "boolean"
+        },
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "timeAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TimeAxisLabelExpression"
+            }
+          ]
+        },
+        "timeAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TimeAxisFormat"
+            }
+          ]
+        },
+        "valueAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisLabelExpression"
+            }
+          ]
+        },
+        "valueAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisFormat"
+            }
+          ]
+        },
+        "domainAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMinValueExpression"
+            }
+          ]
+        },
+        "domainAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMaxValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMinValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMaxValueExpression"
+            }
+          ]
+        }
+      }
+    },
+    "DateExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "HighExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "LowExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "OpenExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "CloseExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "VolumeExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "CandlestickChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "highLowDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HighLowDataset"
+            }
+          ]
+        },
+        "candlestickPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CandlestickPlot"
+            }
+          ]
+        }
+      }
+    },
+    "CandlestickPlot": {
+      "type": "object",
+      "properties": {
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "timeAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TimeAxisLabelExpression"
+            }
+          ]
+        },
+        "timeAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TimeAxisFormat"
+            }
+          ]
+        },
+        "valueAxisLabelExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisLabelExpression"
+            }
+          ]
+        },
+        "valueAxisFormat": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueAxisFormat"
+            }
+          ]
+        },
+        "domainAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMinValueExpression"
+            }
+          ]
+        },
+        "domainAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DomainAxisMaxValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMinValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMinValueExpression"
+            }
+          ]
+        },
+        "rangeAxisMaxValueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RangeAxisMaxValueExpression"
+            }
+          ]
+        }
+      }
+    },
+    "MeterChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "valueDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueDataset"
+            }
+          ]
+        },
+        "meterPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/MeterPlot"
+            }
+          ]
+        }
+      }
+    },
+    "ValueDataset": {
+      "type": "object",
+      "properties": {
+        "dataset": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Dataset"
+            }
+          ]
+        },
+        "valueExpression": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueExpression"
+            }
+          ]
+        }
+      }
+    },
+    "MeterPlot": {
+      "type": "object",
+      "properties": {
+        "shape": {
+          "type": "string",
+          "enum": [
+            "chord",
+            "circle",
+            "pie",
+            "dial"
+          ]
+        },
+        "angle": {
+          "type": "string"
+        },
+        "units": {
+          "type": "string"
+        },
+        "tickInterval": {
+          "type": "string"
+        },
+        "meterColor": {
+          "type": "string"
+        },
+        "needleColor": {
+          "type": "string"
+        },
+        "tickColor": {
+          "type": "string"
+        },
+        "tickCount": {
+          "type": "string"
+        },
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "tickLabelFont": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TickLabelFont"
+            }
+          ]
+        },
+        "valueDisplay": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueDisplay"
+            }
+          ]
+        },
+        "dataRange": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DataRange"
+            }
+          ]
+        },
+        "meterIntervals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MeterInterval"
+          }
+        }
+      }
+    },
+    "ValueDisplay": {
+      "type": "object",
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "mask": {
+          "type": "string"
+        }
+      }
+    },
+    "DataRange": {
+      "type": "object",
+      "properties": {
+        "lowExpression": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LowExpression"
+            }
+          ]
+        },
+        "highExpression": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HighExpression"
+            }
+          ]
+        }
+      }
+    },
+    "MeterInterval": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "alpha": {
+          "type": "string"
+        }
+      }
+    },
+    "ThermometerChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "valueDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueDataset"
+            }
+          ]
+        },
+        "thermometerPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ThermometerPlot"
+            }
+          ]
+        }
+      }
+    },
+    "ThermometerPlot": {
+      "type": "object",
+      "properties": {
+        "valueLocation": {
+          "type": "string",
+          "enum": [
+            "none",
+            "left",
+            "right",
+            "bulb"
+          ],
+          "default": "bulb"
+        },
+        "showValueLines": {
+          "type": "boolean",
+          "default": false
+        },
+        "mercuryColor": {
+          "type": "string"
+        },
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "valueDisplay": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueDisplay"
+            }
+          ]
+        },
+        "dataRange": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/DataRange"
+            }
+          ]
+        },
+        "lowRange": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LowRange"
+            }
+          ]
+        },
+        "mediumRange": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/MediumRange"
+            }
+          ]
+        },
+        "highRange": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HighRange"
+            }
+          ]
+        }
+      }
+    },
+    "LowRange": {
+      "type": "object",
+      "properties": {}
+    },
+    "MediumRange": {
+      "type": "object",
+      "properties": {}
+    },
+    "HighRange": {
+      "type": "object",
+      "properties": {}
+    },
+    "MultiAxisChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "multiAxisPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/MultiAxisPlot"
+            }
+          ]
+        }
+      }
+    },
+    "MultiAxisPlot": {
+      "type": "object",
+      "properties": {
+        "plot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Plot"
+            }
+          ]
+        },
+        "axes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Axis"
+          }
+        }
+      }
+    },
+    "Axis": {
+      "type": "object",
+      "properties": {}
+    },
+    "Crosstab": {
+      "type": "object",
+      "properties": {
+        "repeatColumnHeaders": {
+          "type": "boolean",
+          "default": true
+        },
+        "repeatRowHeaders": {
+          "type": "boolean",
+          "default": true
+        },
+        "columnBreakOffset": {
+          "type": "integer",
+          "default": 10
+        },
+        "runDirection": {
+          "type": "string",
+          "enum": [
+            "LeftToRight",
+            "RightToLeft"
+          ],
+          "default": "LeftToRight"
+        },
+        "ignoreWidth": {
+          "type": "boolean"
+        },
+        "horizontalPosition": {
+          "type": "string",
+          "enum": [
+            "Left",
+            "Right",
+            "Center"
+          ]
+        },
+        "reportElement": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ReportElement"
+            }
+          ]
+        },
+        "box": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Box"
+            }
+          ]
+        },
+        "crosstabParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CrosstabParameter"
+          }
+        },
+        "parametersMapExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ParametersMapExpression"
+            }
+          ]
+        },
+        "crosstabDataset": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CrosstabDataset"
+            }
+          ]
+        },
+        "titleCell": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TitleCell"
+            }
+          ]
+        },
+        "crosstabHeaderCell": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CrosstabHeaderCell"
+            }
+          ]
+        },
+        "rowGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RowGroup"
+          }
+        },
+        "columnGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ColumnGroup"
+          }
+        },
+        "measures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Measure"
+          }
+        },
+        "crosstabCells": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CrosstabCell"
+          }
+        },
+        "whenNoDataCell": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/WhenNoDataCell"
+            }
+          ]
+        }
+      }
+    },
+    "CrosstabParameter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "class": {
+          "type": "string",
+          "default": "java.lang.String"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ParameterValueExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "CrosstabDataset": {
+      "type": "object",
+      "properties": {}
+    },
+    "CrosstabHeaderCell": {
+      "type": "object",
+      "properties": {}
+    },
+    "RowGroup": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "width": {
+          "type": "integer"
+        },
+        "totalPosition": {
+          "type": "string",
+          "enum": [
+            "Start",
+            "End",
+            "None"
+          ],
+          "default": "None"
+        },
+        "headerPosition": {
+          "type": "string",
+          "enum": [
+            "Top",
+            "Middle",
+            "Bottom",
+            "Stretch"
+          ],
+          "default": "Top"
+        },
+        "bucket": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Bucket"
+            }
+          ]
+        },
+        "crosstabRowHeader": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CrosstabRowHeader"
+            }
+          ]
+        },
+        "crosstabTotalRowHeader": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CrosstabTotalRowHeader"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "width"
+      ]
+    },
+    "CrosstabRowHeader": {
+      "type": "object",
+      "properties": {}
+    },
+    "CrosstabTotalRowHeader": {
+      "type": "object",
+      "properties": {}
+    },
+    "ColumnGroup": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "height": {
+          "type": "integer"
+        },
+        "totalPosition": {
+          "type": "string",
+          "enum": [
+            "Start",
+            "End",
+            "None"
+          ],
+          "default": "None"
+        },
+        "headerPosition": {
+          "type": "string",
+          "enum": [
+            "Left",
+            "Center",
+            "Right",
+            "Stretch"
+          ],
+          "default": "Left"
+        },
+        "bucket": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Bucket"
+            }
+          ]
+        },
+        "crosstabHeader": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CrosstabHeader"
+            }
+          ]
+        },
+        "crosstabColumnHeader": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CrosstabColumnHeader"
+            }
+          ]
+        },
+        "crosstabTotalColumnHeader": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CrosstabTotalColumnHeader"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "height"
+      ]
+    },
+    "CrosstabColumnHeader": {
+      "type": "object",
+      "properties": {}
+    },
+    "CrosstabTotalColumnHeader": {
+      "type": "object",
+      "properties": {}
+    },
+    "CrosstabHeader": {
+      "type": "object",
+      "properties": {}
+    },
+    "Bucket": {
+      "type": "object",
+      "properties": {
+        "class": {
+          "type": "string",
+          "default": "java.lang.String"
+        },
+        "order": {
+          "type": "string",
+          "enum": [
+            "Ascending",
+            "Descending",
+            "None"
+          ],
+          "default": "Ascending"
+        },
+        "bucketExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/BucketExpression"
+            }
+          ]
+        },
+        "orderByExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OrderByExpression"
+            }
+          ]
+        },
+        "comparatorExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ComparatorExpression"
+            }
+          ]
+        }
+      }
+    },
+    "BucketExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "OrderByExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "ComparatorExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "Measure": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "class": {
+          "type": "string"
+        },
+        "calculation": {
+          "default": "Nothing"
+        },
+        "incrementerFactoryClass": {
+          "type": "string"
+        },
+        "percentageOf": {
+          "type": "string",
+          "enum": [
+            "None",
+            "GrandTotal"
+          ],
+          "default": "None"
+        },
+        "percentageCalculatorClass": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "MeasureExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "CrosstabCell": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        },
+        "rowTotalGroup": {
+          "type": "string"
+        },
+        "columnTotalGroup": {
+          "type": "string"
+        }
+      }
+    },
+    "CellContents": {
+      "type": "object",
+      "properties": {
+        "backcolor": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "Opaque",
+            "Transparent"
+          ]
+        },
+        "style": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Property"
+          }
+        },
+        "box": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Box"
+            }
+          ]
+        }
+      }
+    },
+    "WhenNoDataCell": {
+      "type": "object",
+      "properties": {}
+    },
+    "Frame": {
+      "type": "object",
+      "properties": {
+        "reportElement": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ReportElement"
+            }
+          ]
+        },
+        "box": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Box"
+            }
+          ]
+        }
+      }
+    },
+    "GanttChart": {
+      "type": "object",
+      "properties": {
+        "chart": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Chart"
+            }
+          ]
+        },
+        "ganttDataset": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GanttDataset"
+            }
+          ]
+        },
+        "barPlot": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/BarPlot"
+            }
+          ]
+        }
+      }
+    },
+    "GanttDataset": {
+      "type": "object",
+      "properties": {
+        "dataset": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Dataset"
+            }
+          ]
+        },
+        "ganttSeries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GanttSeries"
+          }
+        }
+      }
+    },
+    "GanttSeries": {
+      "type": "object",
+      "properties": {
+        "seriesExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SeriesExpression"
+            }
+          ]
+        },
+        "taskExpression": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TaskExpression"
+            }
+          ]
+        },
+        "subtaskExpression": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SubtaskExpression"
+            }
+          ]
+        },
+        "startDateExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/StartDateExpression"
+            }
+          ]
+        },
+        "endDateExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/EndDateExpression"
+            }
+          ]
+        },
+        "percentExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/PercentExpression"
+            }
+          ]
+        }
+      }
+    },
+    "TaskExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "SubtaskExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "PercentExpression": {
+      "type": "object",
+      "properties": {}
+    },
+    "ComponentElement": {
+      "type": "object",
+      "properties": {
+        "reportElement": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ReportElement"
+            }
+          ]
+        },
+        "component": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Component"
+            }
+          ]
+        }
+      }
+    },
+    "Component": {
+      "type": "object",
+      "properties": {}
+    },
+    "GenericElement": {
+      "type": "object",
+      "properties": {
+        "evaluationTime": {
+          "default": "Now"
+        },
+        "evaluationGroup": {
+          "type": "string"
+        },
+        "reportElement": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ReportElement"
+            }
+          ]
+        },
+        "genericElementType": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GenericElementType"
+            }
+          ]
+        },
+        "genericElementParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GenericElementParameter"
+          }
+        }
+      }
+    },
+    "GenericElementType": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "namespace",
+        "name"
+      ]
+    },
+    "GenericElementParameter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "skipWhenNull": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "MultiAxisData": {
+      "type": "object",
+      "properties": {
+        "multiAxisDataset": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/MultiAxisDataset"
+            }
+          ]
+        },
+        "dataAxis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataAxis"
+          }
+        },
+        "multiAxisMeasures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiAxisMeasure"
+          }
+        }
+      }
+    },
+    "MultiAxisDataset": {
+      "type": "object",
+      "properties": {}
+    },
+    "DataAxis": {
+      "type": "object",
+      "properties": {}
+    },
+    "AxisLevel": {
+      "type": "object",
+      "properties": {
+        "labelExpression": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LabelExpression"
+            }
+          ]
+        },
+        "axisLevelBucket": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AxisLevelBucket"
+            }
+          ]
+        }
+      }
+    },
+    "AxisLevelBucket": {
+      "type": "object",
+      "properties": {
+        "class": {
+          "type": "string",
+          "default": "java.lang.String"
+        },
+        "order": {
+          "type": "string",
+          "enum": [
+            "Ascending",
+            "Descending",
+            "None"
+          ],
+          "default": "Ascending"
+        },
+        "bucketExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/BucketExpression"
+            }
+          ]
+        },
+        "comparatorExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ComparatorExpression"
+            }
+          ]
+        },
+        "bucketProperties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BucketProperty"
+          }
+        }
+      }
+    },
+    "BucketProperty": {
+      "type": "object",
+      "properties": {}
+    },
+    "MultiAxisMeasure": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "class": {
+          "type": "string"
+        },
+        "calculation": {
+          "default": "Nothing"
+        },
+        "incrementerFactoryClass": {
+          "type": "string"
+        },
+        "labelExpression": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LabelExpression"
+            }
+          ]
+        },
+        "valueExpression": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ValueExpression"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  }
+}

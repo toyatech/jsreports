@@ -1,0 +1,68 @@
+#!/usr/local/bin/node
+
+var fs = require('fs')
+  , _ = require('lodash')
+  , parser = require('xml2json')
+  , pluralize = require('pluralize');
+
+_.mixin(require('lodash-deep'));
+_.mixin({
+  capitalize: function(string) {
+    return string.charAt(0).toUpperCase() + string.substring(1);
+  },
+  pluralize: pluralize
+});
+
+var structure = {
+  object: { 
+    type: "VariableDeclaration",
+    declarations: [
+      {
+        type: "VariableDeclarator",
+        id: {
+          type: "Identifier",
+          name: "Name"
+        },
+        init: {
+          type: "CallExpression",
+          callee: {
+            type: "MemberExpression",
+              computed: false,
+              object: {
+                type: "MemberExpression",
+                computed: false,
+                object: {
+                  type: "Identifier",
+                  name: "Backbone"
+                },
+                property: {
+                  type: "Identifier",
+                  name: "Model"
+                }
+              },
+              property: {
+                type: "Identifier",
+                name: "extend"
+              }
+            },
+            arguments: [
+              {
+                type: "ObjectExpression",
+                properties: []
+              }
+            ]
+          }
+        } 
+      ],
+    kind: "var"
+  }
+}
+
+function addObject(definition) {
+  var o = _.clone(structure.object);
+  _.deepSet(o, '
+}
+
+var schema = require('./jsreports-schema.json');
+
+
