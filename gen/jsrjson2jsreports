@@ -14,55 +14,72 @@ _.mixin({
 });
 
 var structure = {
-  object: { 
+  Program: {
+    type: 'Program',
+    body: []
+  },
+  VariableDeclaration: {
     type: "VariableDeclaration",
-    declarations: [
-      {
-        type: "VariableDeclarator",
-        id: {
-          type: "Identifier",
-          name: "Name"
-        },
-        init: {
-          type: "CallExpression",
-          callee: {
-            type: "MemberExpression",
-              computed: false,
-              object: {
-                type: "MemberExpression",
-                computed: false,
-                object: {
-                  type: "Identifier",
-                  name: "Backbone"
-                },
-                property: {
-                  type: "Identifier",
-                  name: "Model"
-                }
-              },
-              property: {
-                type: "Identifier",
-                name: "extend"
-              }
-            },
-            arguments: [
-              {
-                type: "ObjectExpression",
-                properties: []
-              }
-            ]
-          }
-        } 
-      ],
+    declarations: [],
     kind: "var"
-  }
+  },
+  ModelDeclarator: { 
+    type: "VariableDeclarator",
+    id: {
+      type: "Identifier",
+      name: "Name"
+    },
+    init: {
+      type: "CallExpression",
+      callee: {
+        type: "MemberExpression",
+        computed: false,
+        object: {
+          type: "MemberExpression",
+          computed: false,
+          object: {
+            type: "Identifier",
+            name: "Backbone"
+          },
+          property: {
+            type: "Identifier",
+            name: "Model"
+          }
+        },
+        property: {
+          type: "Identifier",
+          name: "extend"
+        }
+      },
+      arguments: [
+        {
+          type: "ObjectExpression",
+          properties: []
+        }
+      ]
+    }
+  } 
 }
 
-function addObject(definition) {
-  var o = _.clone(structure.object);
-  _.deepSet(o, '
+function addModelDeclarator(name) {
+  var o = _.extend({}, structure.ModelDeclarator);
+  o.id.name = (name);
+  return o;
 }
 
 var schema = require('./jsreports-schema.json');
 
+var jsreports = _.extend({}, structure.Program);
 
+jsreports.body.push(_.extend({}, structure.VariableDeclaration));
+
+var declarations = [];
+
+_.each(_.keys(schema.definitions), function(key) {
+  var o = addModelDeclarator(key);
+  jsreports.body[0].declarations.push(o);
+});
+
+jsreports.body[0].declarations = declarations;
+
+console.log(JSON.stringify(jsreports, null, 2));
