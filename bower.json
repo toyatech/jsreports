@@ -1,0 +1,25 @@
+{
+  "name": "jsreports",
+  "main": "jsreports.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/toyatech/jsreports",
+  "authors": [
+    "Dusty Little <dlittle@toyatech.net>"
+  ],
+  "description": "A pure javascript reporting engine.",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "javascript",
+    "reports"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

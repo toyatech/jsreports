@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "author": "noisypebble <noisypebble@toyatech.net>",
   "description": "A JavaScript reporting library.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/toyatech/jsreports"
+  },
   "dependencies": {
-    "backbone": "1.1.2",
-    "lodash": "^2.4.1",
-    "lodash-deep": "^1.4.2",
-    "xml2json": "0.5.1"
+    "xmldom": "^0.1.19"
   },
   "devDependencies": {
     "sqlite3": "3.0.2"

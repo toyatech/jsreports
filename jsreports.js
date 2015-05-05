@@ -4,155 +4,43 @@
 // JSReports may be freely distributed under the GPLv2 License.
 // For all details and documentation:
 // http://jsreports.org
-// JSReports is modeled after two excellent open source projects
+// JSReports is modeled after the excellent open source reporting library
 // JasperReports (http://jaspersoft.com/jasperreports)
-// and Backbone.js (http://backbonejs.org)
 //
 (function(root, factory) {
 
   // Setup JSReports appropriately for the environment. Start with AMD.
   if (typeof define === 'function' && define.amd) {
-    define(['underscore', 'backbone', 'exports'], function(_, exports) {
+    define(['exports'], function(exports) {
       // Export global even in AMD case in case this script is loaded with
       // others that may still expect a global JSReports.
-      root.JSReports = factory(root, exports, _, Backbone);
+      root.JSReports = factory(root, exports);
     });
 
   // Next for Node.js or CommonJS.
   } else if (typeof exports !== 'undefined') {
-    var _ = require('underscore')
-      , Backbone = require('backbone');
-    factory(root, exports, _, Backbone);
+    factory(root, exports);
 
   // Finally, as a browser global.
   } else {
-    root.JSReports = factory(root, {}, root._, root.Backbone);
+    root.JSReports = factory(root, {});
   }
 
-}(this, function(root, JSReports, _, Backbone) { 
+}(this, function(root, JSReports) { 
 
-  // Initial Setup
-  // -------------
-  
-  // Save the previous value of the 'JSReports' variable, so that it can be
-  // restored later on, if 'noConflict' is used.
-  var previousJSReports = root.JSReports;
-
-  // Override Backbone.sync to disable persistence
-  Backbone.sync = function(method, model, options) {
-  };
-
-  // Helpers
-  // -------
-
-  // Calculation types used to compute variables
-  var calculations = {
-    'None': function() {},
-    'Count': function() {},
-    'DistinctCount': function() {},
-    'Sum': function() {},
-    'Average': function() {},
-    'Lowest': function() {},
-    'Highest': function() {},
-    'StandardDeviation': function() {},
-    'Variance': function() {},
-    'Custom': function() {},
-    'First': function() {}
+  JSReports.Report = function(reportDesc, options) {
   }
 
-  // JSReports.ReportElement is the basic data object in the framework --
-
-  // Create a new reportElement with the specified attributes
-  var ReportElement = JSReports.ReportElement = Backbone.Model.extend({});
-
-  // Default report bands.
-  var defaultBands = [ "background", "title", "pageHeader", "columnHeader", 
-    "detail", "columnFooter", "pageFooter", "lastPageFooter", "summary", 
-    "noData" ];
-  
-  // JSReports.Report is the basic data object in the framework --
-  // Create a new report with the specified attributes
-  var Report = JSReports.Report = ReportElement.extend({ 
-
-    // Override default constructor to initialize a `Report` model
-    constructor: function(attributes, options) {
-      // parameters
-      if (_.has(attributes, 'parameters')) {
-        this.attributes.parameters = new Parameters(this.attributes.parameters);
+  var DataSet = function(array) {
+    var nextIndex = 0;
+    return {
+      next: function() {
+        return nextIndex < array.length ?
+          { value: array[nextIndex++], done: false} :
+          { done: true };
       }
-      Backbone.Model.apply(this, arguments);
-    },
-
-    // Set some defaults
-    defaults: {
-      name: 'MyReport',
-      columnCount: 1,
-      columnFillOrder: 'Vertical',
-      columnFillDirection: 'LeftToRight',
-      pageWidth: 595,
-      pageHeight: 842,
-      pageOrientation: 'Portrait',
-      columnWidth: 555,
-      columnSpacing: 0,
-      leftMargin: 20,
-      rightMargin: 20,
-      topMargin: 30,
-      bottomMargin: 30,
-      newTitlePage: false,
-      newSummaryPage: false,
-      summaryPageHeaderAndFooter: false,
-      floatColumnFooter: false,
-      ignorePagination: false
     }
-
-  });
-
-  // A `Parameter` is used to pass data to the report and is available via
-  // `$P{<parameter name>} to expressions and the query string.
-  var Parameter = Backbone.Model.extend({
-    
-    // Set defaults
-    defaults: {
-      type: 'String',
-      prompt: true
-    }
-
-  });
-
-  // A collection of `Parameter`s
-  var Parameters = Backbone.Collection.extend({
-    
-    // `Parameter` model
-    model: Parameter
-
-  });
-
-  // Report `Band`
-  var Band = ReportElement.extend({
-
-    // Set defaults    
-    defaults: {
-      height: 0,
-      elements: []
-    }
-
-  });
-
-  // 
-
-  // JSReports.Row
-  // -------------
-
-  // Create a new **Row**
-  var Row = JSReports.Row = Backbone.Model.extend();
-
-  // JSReports.DataSet
-  // -----------------
- 
-  // Create a new **DataSet**
-  var DataSet = JSReports.DataSet = Backbone.Collection.extend({
-    model: Row
-  });
+  }
 
   return JSReports;
 
