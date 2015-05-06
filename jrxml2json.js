@@ -14,6 +14,21 @@
 }(this, function (exports, DOMParser) {
   //'use strict';
 
+  var nodeTypeMap = [
+    'element',
+    'attribute',
+    'text',
+    'cdata_section',
+    'entity_reference',
+    'entity',
+    'processing_instruction',
+    'comment',
+    'document',
+    'document_type',
+    'document_fragment',
+    'notation'
+  ];
+
   var elementNameMap = {
     style: 'styles',
     parameter: 'parameters',
@@ -133,17 +148,6 @@
     return value;
   }
 
-  function formatAttributes(node, obj) {
-    if (node.hasAttributes()) {
-      for (var j = 0; j < node.attributes.length; j++) {
-        var attribute = node.attributes.item(j);
-        obj[format(attribute.nodeName, 'attributeName')] = 
-          format(attribute.nodeValue, 'value');
-      }
-    }
-    return obj;
-  }
-
   function formatBandElement(item) {
     var obj = {}, band = item.getElementsByTagName('band')[0];
     obj['height'] = band.getAttribute('height');
@@ -168,49 +172,105 @@
     return obj;
   }
 
-  function xml2obj(xml) {
-    var obj = {};
-    if (xml.nodeType == 1) {
-      formatAttributes(xml, obj);
-      if (textElements.indexOf(xml.nodeName) > -1) {
-        obj = xml.firstChild.nodeValue;
-      }
-    } else if (xml.nodeType == 3) {
-      //obj = xml.nodeValue;
-      return;
+  function hasTextOrCDATASection(node) {
+    if (node.hasChildNodes()) {
+      var nodeType = node.firstChild.nodeType;
+      return nodeType == 3 || nodeType == 4;
     }
+  }
 
-    if (xml.hasChildNodes()) {
-      for (var i = 0; i < xml.childNodes.length; i++) {
-        var item = xml.childNodes.item(i);
+  function processChildNodes(node, obj) {
+    if (node.hasChildNodes()) {
+      for (var i = 0; i < node.childNodes.length; i++) {
+        var item = node.childNodes.item(i);
         var nodeName = format(item.nodeName, 'elementName');
         if (typeof(obj[nodeName]) == "undefined") {
-          if (xml.nodeType == 1) {
-            if (bandElements.indexOf(nodeName) > -1) {
-              console.log(nodeName);
-              obj[nodeName] = formatBandElement(item);
-            } else {
-              obj[nodeName] = xml2obj(item);
-            }
-          } else {
-            obj = xml2obj(item);
-          }
+          obj[nodeName] = process(item, {});
         } else {
           if (typeof(obj[nodeName].push) == "undefined") {
             var old = obj[nodeName];
             obj[nodeName] = [];
             obj[nodeName].push(old);
           }
-          obj[nodeName].push(xml2obj(item));
+          obj[nodeName].push(process(item, {}));
         }
       }
     }
     return obj;
   }
 
+  function processElement(node, obj) {
+    if (node.hasAttributes()) {
+      for (var i = 0; i < node.attributes.length; i++) {
+        process(node.attributes.item(i), obj);
+      }
+    }
+    if (hasTextOrCDATASection(node)) {
+      process(node.firstChild, obj);
+    }
+    return obj;
+  }
+
+  function processText(node, obj) {
+    if (node.nodeValue.trim()) {
+      return node.nodeValue.trim();
+    } else {
+      return;
+    }
+  }
+
+  function processCDATASection(node, obj) {
+    if (node.nodeValue.trim()) {
+      return node.nodeValue.trim();
+    } else {
+      return;
+    }
+  }
+
+  function processAttribute(node, obj) {
+    obj[format(node.nodeName, 'attributeName')] =
+      format(node.nodeValue, 'value');
+    return obj;
+  }
+
+  var processors = {
+    element: [
+      processElement,
+      processChildNodes
+    ],
+    attribute: [
+      processAttribute
+    ],
+    text:[
+      processText
+    ], 
+    cdata_section: [
+      processCDATASection
+    ], 
+    entity_reference: [], 
+    entity: [], 
+    processing_instruction: [],
+    comment: [],
+    document: [
+      processChildNodes
+    ],
+    document_type: [
+    ],
+    document_fragment: [],
+    notation: []
+  };
+
+  function process(node, obj) {
+    var nodeType = nodeTypeMap[node.nodeType - 1]; 
+    for (var i = 0; i < processors[nodeType].length; i++) {
+      obj = processors[nodeType][i](node, obj);
+    }
+    return obj;
+  }
+
   function convert(data, options) {
-    var xml = new DOMParser().parseFromString(data, 'text/xml');
-    return xml2obj(xml);
+    var node = new DOMParser().parseFromString(data, 'text/xml');
+    return process(node, {});
   }
 
   exports.version = '0.0.0';
