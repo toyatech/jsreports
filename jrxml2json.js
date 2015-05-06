@@ -39,7 +39,8 @@
     'java.sql.Time': 'Date',
     'java.util.Date': 'Date',
     'java.sql.Timestamp': 'Date',
-    'java.net.URI': 'String'
+    'java.net.URI': 'String',
+    'java.awt.Image': 'String'
   };
 
   var textElements = [
@@ -133,10 +134,11 @@
   }
 
   function formatAttributes(node, obj) {
-    if (node.attributes.length > 0) {
+    if (node.hasAttributes()) {
       for (var j = 0; j < node.attributes.length; j++) {
         var attribute = node.attributes.item(j);
-        obj[format(attribute.nodeName, 'attributeName')] = format(attribute.nodeValue, 'value');
+        obj[format(attribute.nodeName, 'attributeName')] = 
+          format(attribute.nodeValue, 'value');
       }
     }
     return obj;
@@ -145,15 +147,22 @@
   function formatBandElement(item) {
     var obj = {}, band = item.getElementsByTagName('band')[0];
     obj['height'] = band.getAttribute('height');
-    obj.elements = [];
-    for (var i = 0; i < band.childNodes.length; i++) {
-      var item = band.childNodes.item(i);
-      if (item.nodeType == 1) {
-        var element = {};
-        element['type'] = item.nodeName;
-        for (var j = 0; j < item.childNodes.length; j++) {
+    if (band.hasChildNodes()) {
+      obj.elements = [];
+      for (var i = 0; i < band.childNodes.length; i++) {
+        var item = band.childNodes.item(i);
+        if (item.nodeType == 1) {
+          var element = {};
+          element['type'] = item.nodeName;
+          for (var j = 0; j < item.childNodes.length; j++) {
+            var elem = item.childNodes.item(j);
+            //console.log('bandElem: ' + elem);
+            //if (item.nodeType == 1) {
+            //  formatAttributes(elem, element);
+            //} 
+          }
+          obj.elements.push(element);
         }
-        obj.elements.push(element);
       }
     }
     return obj;
@@ -178,6 +187,7 @@
         if (typeof(obj[nodeName]) == "undefined") {
           if (xml.nodeType == 1) {
             if (bandElements.indexOf(nodeName) > -1) {
+              console.log(nodeName);
               obj[nodeName] = formatBandElement(item);
             } else {
               obj[nodeName] = xml2obj(item);
