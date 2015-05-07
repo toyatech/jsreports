@@ -41,6 +41,10 @@
     class: 'type'
   };
 
+  var collapseNodes = [
+    'jasperReport'
+  ];
+
   var typeMap = {
     'java.lang.Boolean': 'Boolean',
     'java.lang.String': 'String',
@@ -184,16 +188,21 @@
       for (var i = 0; i < node.childNodes.length; i++) {
         var item = node.childNodes.item(i);
         var nodeName = format(item.nodeName, 'elementName');
-        if (typeof(obj[nodeName]) == "undefined") {
-          obj[nodeName] = process(item, {});
-        } else {
+        console.log(nodeName + ', ' + item.nodeType);
+        if (obj && typeof(obj[nodeName]) == "undefined") {
+          if (!(collapseNodes.indexOf(nodeName) > -1)) {
+            obj = process(item, {});
+          } else {
+            obj[nodeName] = process(item, {});
+          }
+        } else if (obj) {
           if (typeof(obj[nodeName].push) == "undefined") {
             var old = obj[nodeName];
             obj[nodeName] = [];
             obj[nodeName].push(old);
           }
           obj[nodeName].push(process(item, {}));
-        }
+        } 
       }
     }
     return obj;
@@ -232,6 +241,10 @@
       format(node.nodeValue, 'value');
     return obj;
   }
+  
+  function skip() {
+    return;
+  }
 
   var processors = {
     element: [
@@ -249,12 +262,15 @@
     ], 
     entity_reference: [], 
     entity: [], 
-    processing_instruction: [],
+    processing_instruction: [
+      skip
+    ],
     comment: [],
     document: [
       processChildNodes
     ],
     document_type: [
+      skip
     ],
     document_fragment: [],
     notation: []
