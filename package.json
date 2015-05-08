@@ -11,6 +11,6 @@
     "xmldom": "^0.1.19"
   },
   "devDependencies": {
-    "sqlite3": "3.0.2"
+    "sqlite3": "^3.0.8"
   }
 }
