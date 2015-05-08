@@ -28,7 +28,21 @@
 
 }(this, function(root, JSReports) { 
 
+  function $F(field) {
+  }
+
+  function $V(variable) {
+  }
+
+  function $P(parameter) {
+  }
+
+  function evaluateExpression(expression, context) {
+    return function() { return eval(expression); }.call(context);
+  }
+
   JSReports.Report = function(reportDesc, options) {
+    
   }
 
   var DataSet = function(array) {
