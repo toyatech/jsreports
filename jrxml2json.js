@@ -88,35 +88,35 @@
     'summary'
   ];
 
-  function renameElements(str) {
+  function renameElement(str) {
     if (Object.keys(elementNameMap).indexOf(str) >  -1) {
       str = elementNameMap[str];
     }
     return str;
   }
 
-  function renameAttributes(str) {
+  function renameAttribute(str) {
     if (Object.keys(attributeNameMap).indexOf(str) >  -1) {
       str = attributeNameMap[str];
     }
     return str;
   }
 
-  function renameBooleanAttributes(str) {
+  function renameBooleanAttribute(str) {
     if (str.substring(0,2) === 'is') {
       str = str.substring(3,2).toLowerCase() + str.substring(3);
     }
     return str;
   }
 
-  function formatNumbers(str) {
+  function formatNumber(str) {
     if (!isNaN(str)) {
       str = str % 1 === 0 ? parseInt(str, 10) : parseFloat(str);
     }
     return str;
   }
 
-  function formatBooleans(str) {
+  function formatBoolean(str) {
     if (str.toLowerCase() == 'true') {
       str = true;
     } else if (str.toLowerCase() == 'false') {
@@ -125,25 +125,30 @@
     return str;
   }
 
-  function renameTypes(str) {
+  function renameType(str) {
     if (Object.keys(typeMap).indexOf(str) >  -1) {
       str = typeMap[str];
     }
     return str;
   }
 
+  function formatExpression(str) {
+    return str.replace('{','(\'').replace('}','\')');
+  }
+
   var formatters = {
     elementName: [
-      renameElements
+      renameElement
     ],
     attributeName: [
-      renameAttributes,
-      renameBooleanAttributes
+      renameAttribute,
+      renameBooleanAttribute
     ],
     value: [
-      renameTypes,
-      formatBooleans,
-      formatNumbers
+      renameType,
+      formatBoolean,
+      formatNumber,
+      formatExpression
     ]
   };
 
@@ -165,9 +170,7 @@
 
   function hasOwnProperties(obj) {
     for (var k in obj) {
-      if (obj.hasOwnProperty(k)) {
-        return true;
-      }
+      if (obj.hasOwnProperty(k)) { return true; }
     }
     return false;
   }
@@ -193,18 +196,18 @@
           tmp['height'] = band.getAttribute('height');
           if (band.hasChildNodes()) {
             tmp.elements = [];
-            for (var j = 0; j < band.childNodes.length; j++) {
-              var element = band.childNodes.item(j);
-              if (element.nodeType == 1) {
-                if (element.hasChildNodes()) {
-                for (var k = 0; j < element.childNodes.length; k++)
-                  var elementDetail = element.childNodes.item(k);
-                  if (elementDetail.nodeType == 1) {
+            //for (var j = 0; j < band.childNodes.length; j++) {
+              //var element = band.childNodes.item(j);
+              //if (element.nodeType == 1) {
+                //if (element.hasChildNodes()) {
+                //for (var k = 0; j < element.childNodes.length; k++)
+                  //var elementDetail = element.childNodes.item(k);
+                  //if (elementDetail.nodeType == 1) {
                     //tmp.elements.push(mergeProperties({type: element.nodeName}, process(elementDetail)));
-                  }
-                }
-              }
-            }
+                  //}
+                //}
+              //}
+            //}
           }
           obj[nodeName] = tmp; 
         } else {
@@ -236,17 +239,9 @@
     return obj;
   }
 
-  function processText(node, obj) {
+  function processTextOrCDATASection(node, obj) {
     if (node.nodeValue.trim()) {
-      return node.nodeValue.trim();
-    } else {
-      return;
-    }
-  }
-
-  function processCDATASection(node, obj) {
-    if (node.nodeValue.trim()) {
-      return node.nodeValue.trim();
+      return format(node.nodeValue.trim(),'value');
     } else {
       return;
     }
@@ -261,29 +256,18 @@
   function skip() { return; }
 
   var processors = {
-    element: [
-      processElement,
-      processChildNodes
-    ],
-    attribute: [
-      processAttribute
-    ],
-    text:[
-      processText
-    ], 
-    cdata_section: [
-      processCDATASection
-    ], 
-    entity_reference: [skip], 
-    entity: [skip], 
-    processing_instruction: [skip],
-    comment: [skip],
-    document: [
-      processChildNodes
-    ],
-    document_type: [skip],
-    document_fragment: [skip],
-    notation: [skip]
+    element: [ processElement, processChildNodes ],
+    attribute: [ processAttribute ],
+    text:[ processTextOrCDATASection ], 
+    cdata_section: [ processTextOrCDATASection ], 
+    entity_reference: [ skip ], 
+    entity: [ skip ], 
+    processing_instruction: [ skip ],
+    comment: [ skip ],
+    document: [ processChildNodes ],
+    document_type: [ skip ],
+    document_fragment: [ skip ],
+    notation: [ skip ]
   };
 
   function process(node, obj) {
