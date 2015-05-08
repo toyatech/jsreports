@@ -66,16 +66,6 @@
     'java.awt.Image': 'String'
   };
 
-  var textElements = [
-    'queryString', 
-    'variableExpression', 
-    'groupExpression', 
-    'text', 
-    'textFieldExpression', 
-    'imageExpression', 
-    'printWhenExpression'
-  ];
-
   var bandElements = [
     'groupHeader',
     'groupFooter',
@@ -137,19 +127,9 @@
   }
 
   var formatters = {
-    elementName: [
-      renameElement
-    ],
-    attributeName: [
-      renameAttribute,
-      renameBooleanAttribute
-    ],
-    value: [
-      renameType,
-      formatBoolean,
-      formatNumber,
-      formatExpression
-    ]
+    elementName: [ renameElement ],
+    attributeName: [ renameAttribute, renameBooleanAttribute ],
+    value: [ renameType, formatBoolean, formatNumber, formatExpression ]
   };
 
   function format(value, type) {
@@ -196,18 +176,12 @@
           tmp['height'] = band.getAttribute('height');
           if (band.hasChildNodes()) {
             tmp.elements = [];
-            //for (var j = 0; j < band.childNodes.length; j++) {
-              //var element = band.childNodes.item(j);
-              //if (element.nodeType == 1) {
-                //if (element.hasChildNodes()) {
-                //for (var k = 0; j < element.childNodes.length; k++)
-                  //var elementDetail = element.childNodes.item(k);
-                  //if (elementDetail.nodeType == 1) {
-                    //tmp.elements.push(mergeProperties({type: element.nodeName}, process(elementDetail)));
-                  //}
-                //}
-              //}
-            //}
+            for (var j = 0; j < band.childNodes.length; j++) {
+              var element = band.childNodes.item(j);
+              if (element.nodeType == 1) {
+                tmp.elements.push(mergeProperties({type: element.nodeName}, process(element, {})));
+              }
+            }
           }
           obj[nodeName] = tmp; 
         } else {
