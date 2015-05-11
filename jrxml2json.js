@@ -123,7 +123,7 @@
   }
 
   function formatExpression(str) {
-    return str.replace('{','(\'').replace('}','\')');
+    return str.replace('{','(\'').replace('\}','\')');
   }
 
   var formatters = {
