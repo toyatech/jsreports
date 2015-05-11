@@ -29,27 +29,44 @@ describe('jsreports', function() {
         done();
       })
 
+      function formatMessage(k, r, s) {
+        return 'Test failed for: `' + k + '`, expected: `' + s + '`, actual: `' + r + '`';
+      }
+
+      function assertEqual(k, r, s) {
+        if (!(typeof(s) === 'object')) {
+          assert.equal(r[k], s, formatMessage(k, r[k], s));
+        } else {
+          assert.equal(r[k], s[k], formatMessage(k, r[k], s[k]));
+        }
+      }
+
       it('should produce a JSReport Report object', function(done) {
         var report = new Report(reportDesc);
-        assert.equal(report.name, reportDesc.name, 'name');
-        assert.equal(report.columnCount, reportDesc.columnCount, 'columnCount');
-        assert.equal(report.printOrder, Report.PrintOrder.VERTICAL);
-        assert.equal(report.columnDirection, Report.ColumnDirection.LEFT_TO_RIGHT);
-        assert.equal(report.pageWidth, reportDesc.pageWidth);
-        assert.equal(report.pageHeight, reportDesc.pageHeight);
-        assert.equal(report.orientation, Report.Orientation.PORTRAIT);
-        assert.equal(report.noDataAction, Report.NoDataAction.NO_PAGES);
-        assert.equal(report.columnWidth, reportDesc.columnWidth);
-        assert.equal(report.columnSpacing, reportDesc.columnSpacing);
-        assert.equal(report.leftMargin, reportDesc.leftMargin);
-        assert.equal(report.rightMargin, reportDesc.rightMargin);
-        assert.equal(report.topMargin, reportDesc.topMargin);
-        assert.equal(report.bottomMargin, reportDesc.bottomMargin);
-        assert.equal(report.titleOnNewPage, false, 'titleOnNewPage');
-        assert.equal(report.summaryOnNewPage, false);
-        assert.equal(report.summaryWithPageHeaderAndFooter, false);
-        assert.equal(report.floatColumnFooter, false);
-        assert.equal(report.ignorePagination, false);
+        assertEqual('name', report, reportDesc);
+        assertEqual('columnCount', report, reportDesc);
+        assertEqual('printOrder', report, Report.PrintOrder.VERTICAL);
+        assertEqual('columnDirection', report, Report.ColumnDirection.LEFT_TO_RIGHT);
+        assertEqual('pageWidth', report, reportDesc);
+        assertEqual('pageHeight', report, reportDesc);
+        assertEqual('orientation', report, Report.Orientation.PORTRAIT);
+        assertEqual('noDataAction', report, Report.NoDataAction.NO_PAGES);
+        assertEqual('columnWidth', report, reportDesc);
+        assertEqual('columnSpacing', report, reportDesc);
+        assertEqual('leftMargin', report, reportDesc);
+        assertEqual('rightMargin', report, reportDesc);
+        assertEqual('topMargin', report, reportDesc);
+        assertEqual('bottomMargin', report, reportDesc);
+        assertEqual('titleOnNewPage', report, false);
+        assertEqual('summaryOnNewPage', report, false);
+        assertEqual('summaryWithPageHeaderAndFooter', report, false);
+        assertEqual('floatColumnFooter', report, false);
+        assertEqual('ignorePagination', report, false);
+        for (var i = 0; i < report.parameters.length; i++) {
+          assertEqual('name', report.parameters[i], reportDesc.parameters[i]);
+          assertEqual('type', report.parameters[i], reportDesc.parameters[i]);
+        }
+        console.log(JSON.stringify(report, null, 2));
         done();
       })
 
