@@ -41,124 +41,93 @@
     return function() { return eval(expression); }.call(context);
   }
 
-  function defaults(k, r, t, d, e) {
-    if (typeof(e) === 'object') {
-      var a = [];
-      for (var i in e) {
-        a.push(e[i]);
-      }
-      a.indexOf(r[k]) > -1 ? t[k] = r[k] : t[k] = e[d];
-    } else {
-      typeof(r[k]) === typeof(d) ? t[k] = r[k] : t[k] = d;
-    }
-  }
-
-  function required(k, r, t) {
-    if (r[k]) {
-      t[k] = r[k];
-    } else {
-      throw new Error(k + ' is require!');
-    }
-  }
-
-  function optional(k, r, t, d, e) {
-    if (r[k]) {
-      if (Array.isArray(r[k])) {
-        var a = [];
-        for (var i = 0; i < r[k].length; i++) {
-          a.push(new e(r[k][i]));
+  function defaults(v, r, t) {
+    if (defaultValues[v]) {
+      for (var k in defaultValues[v]) {
+        var type = defaultValues[v][k].type;
+        var defaultValue = defaultValues[v][k].defaultValue;
+        var required = defaultValues[v][k].required;
+        if (r[k]) {
+          if (type === 'array') {
+            if (Array.isArray(r[k])) {
+              var a = [];
+              for (var i = 0; i < r[k].length; i++) {
+                a.push(new defaultValue(r[k][i]));
+              }
+              t[k] = a;
+            }
+          } else if (type === 'object') {
+            t[k] = defaultValue(r[k]);
+          } else if (typeof(type) === 'object') {
+            var a = [];
+            for (var i in type) {
+              a.push(type[i]);
+            }
+            a.indexOf(r[k]) > -1 ? t[k] = r[k] : t[k] = type[defaultValue];
+          } else {
+            typeof(r[k]) === type ? t[k] = r[k] : t[k] = defaultValue;
+          }
         }
-        t[k] = a;
-      } else {
-        t[k] = defaults(k, r, t, d, e);
       }
-    } 
-  }
-
-  var defaults = {
-    Report: {
-      name: { type: 'string', required: true },
-      columnCount: { type: 'number', value: 1 },
-      printOrder: { type: PrintOrder, value: PrintOrder.VERTICAL },
-      columnDirection: { type: ColumnDirection, value: ColumnDirection.LEFT_TO_RIGHT },
-      pageWidth: { type: 'number', value: 595 },
-      pageHeight: { type: 'number', value: 842 },
-      orientation: { type: Orientation, value: Orientation.PORTRAIT },
-      noDataCtion: { type: NoDataAction, value: NoDataAction.NO_PAGES },
-      columnWidth: { type: 'number', value: 555 },
-      columnSpacing: { type: 'number', value: 0 },    
-      leftMargin: { type: 'number', value: 20 },
-      rightMargin: { type: 'number', value: 20 },
-      topMargin: { type: 'number', value: 30 },
-      bottomMargin: { type: 'number', value: 30 },
-      titleOnNewPage: { type: 'boolean', value: false },
-      summaryOnNewPage: { type: 'boolean', value: false },
-      summaryWithPageHeaderAndFooter: { type: 'boolean', value: false },
-      floatColumnFooter: { type: 'boolean', value: false },
-      ignorePagination: { type: 'boolean', value: false },
-      styles: { type: 'array', value: Style },
-      parameters: { type: 'array', value: Parameter },
-      fields: { type: 'array', value: Field },
-      variables: { type: 'array', value: Variable },
-      groups: { type: 'array', value: Group },
-      title: { type: 'object', value: Band },
-      pageHeader: { type: 'object', value: Band },
-      columnHeader: { type: 'object', value: Band },
-      detail: { type: 'object', value: Band },
-      columnFooter: { type: 'object', value: Band },
-      pageFooter: { type: 'object', value: Band },
-      summary: { type: 'object', value: Band } 
-    },
-    Style: {
-      name: { type: 'string', required: true },
-      default: { type: 'boolean', value: false },
-      style: { type: 'string' },
-      opacity: { type: 'number', minimum: 0.0, maximum: 1.0 },
-      foregroundColor: { type: 'string', match: '^#[0-9a-f]{3}([0-9a-f]{3})?$' },
-      backgroundColor: { type: 'string', match: '^#[0-9a-f]{3}([0-9a-f]{3})?$' },
-      stroke: {}
     }
   }
-       
 
   var Report = function(reportDesc, options) {
-    this.reportDesc = reportDesc;
     this.options = options || {};
-
-    //optional('detail', reportDesc, this, {}, Band);
-    //optional('columnFootet', reportDesc, this, {}, Band);
-    //optional('pageFooter', reportDesc, this, {}, Band);
-    //optional('summary', reportDesc, this, {}, Band);
+    defaults('Report', reportDesc, this);
   }
 
-  var Property = Report.Property = function(propertyDesc) {
-    //this.name = required(propertyDesc.name, 'name');
-    //this.value = propertyDesc.value;
+  var PrintOrder = Report.PrintOrder = {
+    VERTICAL: 'Vertical',
+    HORIZONTAL: 'Horizontal'
+  }
+
+  var ColumnDirection = Report.ColumnDirection = {
+    LEFT_TO_RIGHT: 'LeftToRight',
+    RIGHT_TO_LEFT: 'RightToLeft'
+  }
+
+  var Orientation = Report.Orientation = {
+    PORTRAIT: 'Portrait',
+    LANDSCAPE: 'Landscape'
+  }
+
+  var NoDataAction = Report.NoDataAction = {
+    NO_PAGES: 'NoPages',
+    BLANK_PAGE: 'BlankPage',
+    ALL_SECTIONS_NO_DETAIL: 'AllSectionsNoDetail',
+    NO_DATA_SECTION: 'NoDataSection'
+  }
+ 
+  var Report = function(reportDesc, options) {
+    this.options = options || {};
+    defaults('Report', reportDesc, this);
   }
 
   var Parameter = Report.Parameter = function(parameterDesc) {
-    required('name', parameterDesc, this);
-    defaults('type', parameterDesc, this, 'String');
-    optional('nestedType', parameterDesc, this);
-    optional('description', parameterDesc, this)
-    optional('default', parameterDesc, this);
-    optional('prompt', parameterDesc, this);
+    defaults('Parameter', parameterDesc, this);
+    //required('name', parameterDesc, this);
+    //defaults('type', parameterDesc, this, 'String');
+    //optional('nestedType', parameterDesc, this);
+    //optional('description', parameterDesc, this)
+    //optional('default', parameterDesc, this);
+    //optional('prompt', parameterDesc, this);
   }
 
   var Field = Report.Field = function(fieldDesc) {
-    required('name', fieldDesc, this);
-    defaults('type', fieldDesc, this, 'String');
-    optional('description', fieldDesc, this);
+    //required('name', fieldDesc, this);
+    //defaults('type', fieldDesc, this, 'String');
+    //optional('description', fieldDesc, this);
   }
 
   var Variable = Report.Variable = function(variableDesc) {
-    required('name', variableDesc, this);
-    defaults('type', variableDesc, this, 'String');
-    defaults('resetType', variableDesc, this, 'REPORT', VariableResetType);
-    optional('incrementGroup', variableDesc, this);
-    defaults('calculation', variableDesc, this, 'NOTHING', VariableCalculation);
-    optional('expression', variableDesc, this);
-    optional('initialValue', variableDesc, this);
+    //required('name', variableDesc, this);
+    //defaults('type', variableDesc, this, 'String');
+    //defaults('resetType', variableDesc, this, 'REPORT', VariableResetType);
+    //optional('incrementGroup', variableDesc, this);
+    //defaults('calculation', variableDesc, this, 'NOTHING', VariableCalculation);
+    //optional('expression', variableDesc, this);
+    //optional('initialValue', variableDesc, this);
   }
 
   var VariableResetType = Variable.VariableResetType = {
@@ -182,7 +151,7 @@
     SYSTEM: 'System',
     FIRST: 'First'
   }
-  
+
   var Group = Report.Group = function(groupDesc) {
   }
 
@@ -192,30 +161,60 @@
   var Style = Report.Style = function(styleDesc) {
   }
 
-  var PrintOrder = Report.PrintOrder = {
-    VERTICAL: 'Vertical',
-    HORIZONTAL: 'Horizontal'
-  }
-  
-  var ColumnDirection = Report.ColumnDirection = {
-    LEFT_TO_RIGHT: 'LeftToRight',
-    RIGHT_TO_LEFT: 'RightToLeft'
-  }
-
-  var Orientation = Report.Orientation = {
-    PORTRAIT: 'Portrait',
-    LANDSCAPE: 'Landscape'
-  }
-
-  var NoDataAction = Report.NoDataAction = {
-    NO_PAGES: 'NoPages',
-    BLANK_PAGE: 'BlankPage',
-    ALL_SECTIONS_NO_DETAIL: 'AllSectionsNoDetail',
-    NO_DATA_SECTIONL: 'NoDataSection'
-  }
-
-  Report.prototype.getParameters = function() {
-    return this.reportDesc.parameters;
+  var defaultValues = {
+    Report: {
+      name: { type: 'string', required: true },
+      columnCount: { type: 'number', defaultValue: 1 },
+      printOrder: { type: PrintOrder, defaultValue: PrintOrder.VERTICAL },
+      columnDirection: { 
+        type: ColumnDirection, defaultValue: ColumnDirection.LEFT_TO_RIGHT },
+      pageWidth: { type: 'number', defaultValue: 595 },
+      pageHeight: { type: 'number', defaultValue: 842 },
+      orientation: { type: Orientation, defaultValue: Orientation.PORTRAIT },
+      noDataCtion: { type: NoDataAction, defaultValue: NoDataAction.NO_PAGES },
+      columnWidth: { type: 'number', defaultValue: 555 },
+      columnSpacing: { type: 'number', defaultValue: 0 },    
+      leftMargin: { type: 'number', defaultValue: 20 },
+      rightMargin: { type: 'number', defaultValue: 20 },
+      topMargin: { type: 'number', defaultValue: 30 },
+      bottomMargin: { type: 'number', defaultValue: 30 },
+      titleOnNewPage: { type: 'boolean', defaultValue: false },
+      summaryOnNewPage: { type: 'boolean', defaultValue: false },
+      summaryWithPageHeaderAndFooter: { type: 'boolean', defaultValue: false },
+      floatColumnFooter: { type: 'boolean', defaultValue: false },
+      ignorePagination: { type: 'boolean', defaultValue: false },
+      styles: { type: 'array', defaultValue: Style },
+      parameters: { type: 'array', defaultValue: Parameter },
+      fields: { type: 'array', defaultValue: Field },
+      variables: { type: 'array', defaultValue: Variable },
+      groups: { type: 'array', defaultValue: Group },
+      title: { type: 'object', defaultValue: Band },
+      pageHeader: { type: 'object', defaultValue: Band },
+      columnHeader: { type: 'object', defaultValue: Band },
+      detail: { type: 'object', defaultValue: Band },
+      columnFooter: { type: 'object', defaultValue: Band },
+      pageFooter: { type: 'object', defaultValue: Band },
+      summary: { type: 'object', defaultValue: Band } 
+    },
+    Style: {
+      name: { type: 'string', required: true },
+      default: { type: 'boolean', defaultValue: false },
+      style: { type: 'string' },
+      opacity: { type: 'number', minimum: 0.0, maximum: 1.0 },
+      foregroundColor: { 
+        type: 'string', match: '^#[0-9a-f]{3}([0-9a-f]{3})?$' },
+      backgroundColor: { 
+        type: 'string', match: '^#[0-9a-f]{3}([0-9a-f]{3})?$' },
+      stroke: {}
+    },
+    Parameter: {
+      name: { type: 'string', required: true },
+      type: { type: 'string', defaultValue: 'String' },
+      nestedType: { type: 'string' },
+      description: { type: 'string' },
+      default: { type: 'string' },
+      prompt: { type: 'boolean', defaultValue: true }
+    }
   }
 
   var DataSet = function(array) {
