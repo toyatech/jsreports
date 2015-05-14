@@ -46,33 +46,32 @@
       for (var k in defaultValues[v]) {
         var type = defaultValues[v][k].type;
         var defaultValue = defaultValues[v][k].defaultValue;
-        var required = defaultValues[v][k].required;
-        if (r[k]) {
-          if (type === 'array') {
-            if (Array.isArray(r[k])) {
-              var a = [];
-              for (var i = 0; i < r[k].length; i++) {
-                a.push(new defaultValue(r[k][i]));
-              }
-              t[k] = a;
-            }
-          } else if (type === 'object') {
-            t[k] = defaultValue(r[k]);
-          } else if (typeof(type) === 'object') {
+        var required = defaultValues[v][k].required || false;
+        if (type === 'array') {
+          if (Array.isArray(r[k])) {
             var a = [];
-            for (var i in type) {
-              a.push(type[i]);
+            for (var i = 0; i < r[k].length; i++) {
+              a.push(new defaultValue(r[k][i]));
             }
-            a.indexOf(r[k]) > -1 ? t[k] = r[k] : t[k] = type[defaultValue];
-          } else {
-            typeof(r[k]) === type ? t[k] = r[k] : t[k] = defaultValue;
+            t[k] = a;
           }
+        } else if (type === 'object') {
+          t[k] = defaultValue(r[k]);
+        } else if (typeof(type) === 'object') {
+          var a = [];
+          for (var i in type) {
+            a.push(type[i]);
+          }
+          a.indexOf(r[k]) > -1 ? t[k] = r[k] : t[k] = defaultValue;
+        } else {
+          typeof(r[k]) === type ? t[k] = r[k] : t[k] = defaultValue;
         }
       }
     }
   }
 
   var Report = function(reportDesc, options) {
+    reportDesc = reportDesc || {};
     this.options = options || {};
     defaults('Report', reportDesc, this);
   }
@@ -99,38 +98,19 @@
     NO_DATA_SECTION: 'NoDataSection'
   }
  
-  var Report = function(reportDesc, options) {
-    this.options = options || {};
-    defaults('Report', reportDesc, this);
-  }
-
   var Parameter = Report.Parameter = function(parameterDesc) {
     defaults('Parameter', parameterDesc, this);
-    //required('name', parameterDesc, this);
-    //defaults('type', parameterDesc, this, 'String');
-    //optional('nestedType', parameterDesc, this);
-    //optional('description', parameterDesc, this)
-    //optional('default', parameterDesc, this);
-    //optional('prompt', parameterDesc, this);
   }
 
   var Field = Report.Field = function(fieldDesc) {
-    //required('name', fieldDesc, this);
-    //defaults('type', fieldDesc, this, 'String');
-    //optional('description', fieldDesc, this);
+    defaults('Field', fieldDesc, this);
   }
 
   var Variable = Report.Variable = function(variableDesc) {
-    //required('name', variableDesc, this);
-    //defaults('type', variableDesc, this, 'String');
-    //defaults('resetType', variableDesc, this, 'REPORT', VariableResetType);
-    //optional('incrementGroup', variableDesc, this);
-    //defaults('calculation', variableDesc, this, 'NOTHING', VariableCalculation);
-    //optional('expression', variableDesc, this);
-    //optional('initialValue', variableDesc, this);
+    defaults('Variable', variableDesc, this);
   }
 
-  var VariableResetType = Variable.VariableResetType = {
+  var ResetType = Variable.ResetType = {
     NONE: 'None',
     REPORT: 'Report',
     PAGE: 'Page',
@@ -138,7 +118,7 @@
     GROUP: 'Group'
   }
 
-  var VariableCalculation = Variable.VariableCalculation = {
+  var Calculation = Variable.Calculation = {
     NOTHING: 'Nothing',
     COUNT: 'Count',
     DISTINCT_COUNT: 'DistinctCount',
@@ -153,12 +133,22 @@
   }
 
   var Group = Report.Group = function(groupDesc) {
+    defaults('Group', groupDesc, this);
+  }
+
+  var FooterPosition = Group.FooterPosition = {
+    NORMAL: 'Normal',
+    STACK_AT_BOTTOM: 'StackAtBottom',
+    FORCE_AT_BOTTOM: 'ForceAtBottom',
+    COLLATE_AT_BOTTOM: 'CollateAtBottom'
   }
 
   var Band = Report.Band = function(bandDesc) {
+    defaults('Band', bandDesc, this);
   }
 
   var Style = Report.Style = function(styleDesc) {
+    defaults('Style', styleDesc, this);
   }
 
   var defaultValues = {
@@ -171,7 +161,7 @@
       pageWidth: { type: 'number', defaultValue: 595 },
       pageHeight: { type: 'number', defaultValue: 842 },
       orientation: { type: Orientation, defaultValue: Orientation.PORTRAIT },
-      noDataCtion: { type: NoDataAction, defaultValue: NoDataAction.NO_PAGES },
+      noDataAction: { type: NoDataAction, defaultValue: NoDataAction.NO_PAGES },
       columnWidth: { type: 'number', defaultValue: 555 },
       columnSpacing: { type: 'number', defaultValue: 0 },    
       leftMargin: { type: 'number', defaultValue: 20 },
@@ -185,16 +175,20 @@
       ignorePagination: { type: 'boolean', defaultValue: false },
       styles: { type: 'array', defaultValue: Style },
       parameters: { type: 'array', defaultValue: Parameter },
+      queryString: { type: 'string' },
       fields: { type: 'array', defaultValue: Field },
       variables: { type: 'array', defaultValue: Variable },
       groups: { type: 'array', defaultValue: Group },
+      background: { type: 'object', defaultValue: Band },
       title: { type: 'object', defaultValue: Band },
       pageHeader: { type: 'object', defaultValue: Band },
       columnHeader: { type: 'object', defaultValue: Band },
       detail: { type: 'object', defaultValue: Band },
       columnFooter: { type: 'object', defaultValue: Band },
       pageFooter: { type: 'object', defaultValue: Band },
-      summary: { type: 'object', defaultValue: Band } 
+      lastPageFooter: { type: 'object', defaultValue: Band },
+      summary: { type: 'object', defaultValue: Band },
+      noData: { type: 'object', defaultValue: Band }
     },
     Style: {
       name: { type: 'string', required: true },
@@ -214,6 +208,39 @@
       description: { type: 'string' },
       default: { type: 'string' },
       prompt: { type: 'boolean', defaultValue: true }
+    },
+    Field: {
+      name: { type: 'string', required: true },
+      type: { type: 'string', defaultValue: 'String' },
+      description: { type: 'string' }
+    },
+    Variable: {
+      name: { type: 'string', required: true },
+      type: { type: 'string', defaultValue: 'String' },
+      resetType: { type: ResetType, defaultValue: ResetType.REPORT },
+      resetGroup: { type: 'string' },
+      incrementType: { type: ResetType, defaultValue: ResetType.NONE },
+      incrementGroup: { type: 'string' },
+      calculation: { type: Calculation, defaultValue: Calculation.NOTHING },
+      expression: { type: 'string' },
+      initialValueExpression: { type: 'string' }
+    },
+    Group: {
+      name: { type: 'string', required: true },
+      startNewColumn: { type: 'boolean', defaultValue: false },
+      startNewPage: { type: 'boolean', defaultValue: false },
+      resetPageNumber: { type: 'boolean', defaultValue: false },
+      reprintHeaderOnEachPage: { type: 'boolean', defaultValue: false },
+      minimumHeightToStartNewPage: { type: 'number', defaultValue: 0 },
+      footerPosition: { 
+        type: FooterPosition, defaultValue: FooterPosition.NORMAL },
+      keepTogether: { type: 'boolean', defaultValue: false },
+      expression: { type: 'string' },
+      groupHeader: { type: 'object', defaultValue: Band },
+      groupFooter: { type: 'object', defaultValue: Band }
+    },
+    Band: {
+      height: { type: 'number', defaultValue: 0 }
     }
   }
 
