@@ -34,7 +34,8 @@
     parameter: 'parameters',
     field: 'fields',
     variable: 'variables',
-    group: 'groups'
+    group: 'groups',
+    mode: 'opacity'
   };
 
   var attributeNameMap = {
