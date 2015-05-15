@@ -66,7 +66,7 @@ describe('jsreports', function() {
           assertEqual('name', report.parameters[i], reportDesc.parameters[i]);
           assertEqual('type', report.parameters[i], reportDesc.parameters[i]);
         }
-        console.log(JSON.stringify(report, null, 2));
+        //console.log(JSON.stringify(report, null, 2));
         done();
       })
 
