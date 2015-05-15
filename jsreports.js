@@ -47,24 +47,30 @@
         var type = defaultValues[v][k].type;
         var defaultValue = defaultValues[v][k].defaultValue;
         var required = defaultValues[v][k].required || false;
-        if (type === 'array') {
-          if (Array.isArray(r[k])) {
-            var a = [];
-            for (var i = 0; i < r[k].length; i++) {
-              a.push(new defaultValue(r[k][i]));
+        if (r[k]) {
+          if (type === 'array') {
+            if (Array.isArray(r[k])) {
+              var a = [];
+              for (var i = 0; i < r[k].length; i++) {
+                a.push(new defaultValue(r[k][i]));
+              }
+              t[k] = a;
             }
-            t[k] = a;
+          } else if (type === 'object') {
+            t[k] = defaultValue(r[k]);
+          } else if (typeof(type) === 'object') {
+            var a = [];
+            for (var i in type) {
+              a.push(type[i]);
+            }
+            a.indexOf(r[k]) > -1 ? t[k] = r[k] : t[k] = defaultValue;
+          } else {
+            typeof(r[k]) === type ? t[k] = r[k] : t[k] = defaultValue;
           }
-        } else if (type === 'object') {
-          t[k] = defaultValue(r[k]);
-        } else if (typeof(type) === 'object') {
-          var a = [];
-          for (var i in type) {
-            a.push(type[i]);
-          }
-          a.indexOf(r[k]) > -1 ? t[k] = r[k] : t[k] = defaultValue;
         } else {
-          typeof(r[k]) === type ? t[k] = r[k] : t[k] = defaultValue;
+          if (!(type === 'object')) { 
+            t[k] = defaultValue;
+          }
         }
       }
     }
